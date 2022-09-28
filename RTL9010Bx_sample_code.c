@@ -1104,67 +1104,7 @@ u8 RTL9010Bx_HOSTCMD_send_rwake(void)
 	return E_NOERR;
 }
 
-u8 RTL9010Bx_Wake_level_select(u8 level_select)
-{
-	u16 mdio_data=0;
 
-	if(level_select !=1 && level_select !=0 )
-		return E_INVALD;
-
-	mdio_write(0x1b, 0xd010); 
-	mdio_write(0x1c, 0xe2c9); 
-
-	//opcr7_en = 1
-	mdio_write(0x1b, 0xe03e); 
-	mdio_data = mdio_read(0x1c);
-	BIT_SET(mdio_data, 15);
-	mdio_write(0x1b, 0xe03e); 
-	mdio_write(0x1c, mdio_data); 
-
-	mdio_write(0x1b, 0xe016); 
-	mdio_data = mdio_read(0x1c);
-	if(level_select == 0)
-		BIT_CLR(mdio_data, 2);
-	else
-		BIT_SET(mdio_data, 2);
-
-	mdio_write(0x1b, 0xe016); 
-	mdio_write(0x1c, mdio_data); 
-
-	//opcr7_en = 0
-	mdio_write(0x1b, 0xe03e); 
-	mdio_data = mdio_read(0x1c);
-	BIT_CLR(mdio_data, 15);
-	mdio_write(0x1b, 0xe03e); 
-	mdio_write(0x1c, mdio_data); 
-
-	mdio_write(0x1b, 0xd010); 
-	mdio_write(0x1c, 0x82c9); 	
-
-	return E_NOERR;
-}
-
-u8 RTL9010Bx_Get_wake_level(void)
-{
-	u16 mdio_data=0;
-
-	mdio_write(0x1b, 0xd010); 
-	mdio_write(0x1c, 0xe2c9); 
-
-	mdio_write(0x1b, 0xe016); 
-	mdio_data = mdio_read(0x1c);
-
-	mdio_write(0x1b, 0xd010); 
-	mdio_write(0x1c, 0x82c9); 
-
-	if(mdio_data == 0xFFFF)
-		return E_NOTRDY;
-	if(BIT_TST(mdio_data, 2) == 0)
-		return Wake_level_1;
-	else
-		return Wake_level_2;
-
-}
 
 u8 RTL9010Bx_Sleep_cap_check(void)
 {
