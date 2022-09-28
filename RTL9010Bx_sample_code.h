@@ -1,3 +1,4 @@
+//All functions can refer to RTL9010Bx_Sample_Code_Note_v0.1.pdf.
 
 #include "mdio.h"
 #include "mdio2.h"
@@ -21,8 +22,6 @@
 #define Lwake_to_rwake_is_enabled		1
 #define Lwake_to_rwake_is_disabled		2
 
-#define Wake_level_1	0 //VIH_WAKE1 and VIL_WAKE1
-#define Wake_level_2	1 //VIH_WAKE2 and VIL_WAKE2
 
 #define TurnOn		1
 #define TurnOff		0
@@ -171,8 +170,6 @@ u8 RTL9010Bx_Disable_rwake(void);
 u8 RTL9010Bx_Enable_rwake(void);
 u8 RTL9010Bx_Get_lwake_edge(void);
 u8 RTL9010Bx_Set_lwake_edge(u8 edge_select);
-u8 RTL9010Bx_Wake_level_select(u8 level_select);
-u8 RTL9010Bx_Get_wake_level(void);
 u8 RTL9010Bx_Sleep_cap_check(void);
 u8 RTL9010Bx_xMII_driving_strength(u8 RGMII_Voltage);
 u8 RTL9010Bx_PHY_ready(void);
