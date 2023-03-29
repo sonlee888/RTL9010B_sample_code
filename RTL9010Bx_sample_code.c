@@ -2,7 +2,7 @@
 
 #include "RTL9010Bx_sample_code.h"
 
-u16 param_check[12*3] = { 0x0bc4,21,0x1c3e,  0x0bc5,18,0x0299,  0x0bcc,16,0x767a,  0, 0x82c2,0x3e34, 
+u16 param_check[12*3] = { 0x0bc4,21,0x1e3e,  0x0bc5,18,0x0199,  0x0bcc,16,0x767a,  0, 0x82c2,0x3e34, 
                                                0, 0x82ff,0x3e34,  0, 0x8251,0x4481,  0, 0x828e, 0x4481,  0, 0x8266,0x801b, 
                                                0, 0x826e,0x3400,  0, 0x8229,0xc81b,  0, 0x8231,0x2a00,  0x0ac4,16,0x0190 };
 
@@ -19,9 +19,9 @@ u8 RTL9010Bx_Initial_Configuration(void)
 
 
 	mdio_write(31, 0x0bc4);
-	mdio_write(21, 0x1C3E);
+	mdio_write(21, 0x1E3E);
 	mdio_write(31, 0x0bc5);
-	mdio_write(18, 0x0299);
+	mdio_write(18, 0x0199);
 
 	mdio_write(31, 0x0bcc);
 	mdio_write(16, 0x767A);
@@ -48,6 +48,13 @@ u8 RTL9010Bx_Initial_Configuration(void)
 
 	mdio_write(31, 0x0ac4);
 	mdio_write(16, 0x190);
+
+	mdio_write(27, 0x859c);
+	mdio_write(28, 0x0509);
+	mdio_write(27, 0x859E);
+	mdio_write(28, 0x0003);
+	mdio_write(27, 0x85A0);
+	mdio_write(28, 0x0002);
 
 	mdio_write(27, 0xb820);
 	mdio_write(28, 0x0010);
@@ -145,9 +152,9 @@ u8 RTL9010Bx_Initial_with_EEE_Configuration(void)
 
 
 	mdio_write(31, 0x0bc4);
-	mdio_write(21, 0x1C3E);
+	mdio_write(21, 0x1E3E);
 	mdio_write(31,0x0bc5);
-	mdio_write(18, 0x0299);
+	mdio_write(18, 0x0199);
 
 	mdio_write(31, 0x0bcc);
 	mdio_write(16, 0x767A);
@@ -171,6 +178,13 @@ u8 RTL9010Bx_Initial_with_EEE_Configuration(void)
 	mdio_write(28, 0xC81B);
 	mdio_write(27, 0x8231);
 	mdio_write(28, 0x2A00);
+
+	mdio_write(27, 0x859c);
+	mdio_write(28, 0x0509);
+	mdio_write(27, 0x859E);
+	mdio_write(28, 0x0003);
+	mdio_write(27, 0x85A0);
+	mdio_write(28, 0x0002);
 
 	mdio_write(31, 0x0ac4);
 	mdio_write(16, 0x190);
