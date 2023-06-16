@@ -320,7 +320,7 @@ u8 RTL9010Bx_Check_Linkup(void)
 		if (0 == counter)
 			return E_TIMOUT;
 
-	}while (mdio_data != 0xD);
+	}while (0x0004 != (mdio_data & 0x0004));
 	
 
 	return E_NOERR;
@@ -1035,7 +1035,7 @@ u8 RTL9010Bx_IOL_test(u8 TestMode_selection, u8 SpeedType)
 
 			case 1://Test Mode1
 				DBGMSG(("Test Mode 1\r\n"));
-				mdio_write(0x09, (mdio_data & 0x1FFF) | 0x2000);//set reg PHYCR bit15:13 = 001
+				mdio_write(0x09, (mdio_data & 0x1FFF) | 0x0000);//set reg PHYCR bit15:13 = 000 (Normal operation)
 
 				/* Output TX_CLK to PTP_GPIO setting: */
 				mdio_write(27, 0xbc52); 
@@ -1797,7 +1797,7 @@ u8 RTL9010Bx_MACsec_Initial_Configuration_example_1(void)
 	//					01b : bypass with bad packet indicator,
 	//					10b : internal drop by crypto-core (packet is not seen outside),
 	//					11b : do not drop (for debugging only).
-	RTL9010Bx_MACsec_Ingress_Write(0x7000, 0x0012000A);
+	RTL9010Bx_MACsec_Ingress_Write(0x7000, 0x0013000A);
 
 	// MACsec Ingress parsing setting for SAK-2, 
 	// Match DA[7~0] = 0x63 and SCI = 12 15 35 24 - C0 89 5E 81 to encrypt with SA-1 key.
@@ -1845,7 +1845,7 @@ u8 RTL9010Bx_MACsec_Initial_Configuration_example_1(void)
 	//					01b : bypass with bad packet indicator,
 	//					10b : internal drop by crypto-core (packet is not seen outside),
 	//					11b : do not drop (for debugging only).
-	RTL9010Bx_MACsec_Ingress_Write(0x7004, 0x0012010A);
+	RTL9010Bx_MACsec_Ingress_Write(0x7004, 0x0013010A);
 
 	// Enable SA match for SAK-1 and SAK-2.
 	RTL9010Bx_MACsec_Ingress_Write(0x6000, 0x00000003);
@@ -2051,7 +2051,7 @@ u8 RTL9010Bx_MACsec_Initial_Configuration_example_2(void)
 	//					01b : bypass with bad packet indicator,
 	//					10b : internal drop by crypto-core (packet is not seen outside),
 	//					11b : do not drop (for debugging only).
-	RTL9010Bx_MACsec_Ingress_Write(0x7000, 0x0012000A);
+	RTL9010Bx_MACsec_Ingress_Write(0x7000, 0x0013000A);
 
 	// MACsec Ingress parsing setting for SAK-2, 
 	// Match DA[7~0] = 0x63 and SCI = 12 15 35 24 - C0 89 5E 81 to encrypt with SA-1 key.
@@ -2108,7 +2108,7 @@ u8 RTL9010Bx_MACsec_Initial_Configuration_example_2(void)
 	//					01b : bypass with bad packet indicator,
 	//					10b : internal drop by crypto-core (packet is not seen outside),
 	//					11b : do not drop (for debugging only).
-	RTL9010Bx_MACsec_Ingress_Write(0x7004, 0x0012010A);
+	RTL9010Bx_MACsec_Ingress_Write(0x7004, 0x0013010A);
 
 	// Enable SA match for SAK-1 and SAK-2.
 	RTL9010Bx_MACsec_Ingress_Write(0x6000, 0x00000003);
