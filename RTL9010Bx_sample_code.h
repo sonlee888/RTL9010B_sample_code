@@ -1,4 +1,4 @@
-//All functions can refer to RTL9010Bx_Sample_Code_Note_v0.1.pdf.
+//All functions can refer to RTL9010Bx_Sample_Code_Note_v0.2.pdf.
 
 #include "mdio.h"
 #include "mdio2.h"
@@ -23,8 +23,6 @@
 #define Lwake_to_rwake_is_disabled		2
 
 
-#define TurnOn		1
-#define TurnOff		0
 
 #define BIT_TST(x,n)			(x&(1<<n))
 #define BIT_SET(x,n)			(x|=(1<<n))
@@ -39,6 +37,7 @@
 #define GENERAL_INTERRUPT_STATUS_LINK_STATUS_CHANGED			2
 #define GENERAL_INTERRUPT_STATUS_PTP_EVENT						3
 #define GENERAL_INTERRUPT_STATUS_PHY_FATAL_ERROR				4
+#define GENERAL_INTERRUPT_STATUS_MACSEC_EVENT				5
 
 #define GENERAL_INTERRUPT_SUB_STATUS_SLEEP_ACK				0
 #define GENERAL_INTERRUPT_SUB_STATUS_SLEEP_FAIL			1
@@ -62,6 +61,16 @@
 #define OP_INTERRUPT_STATUS_PHY_PWR_ON							15
 #define OP_INTERRUPT_STATUS_RESET_PHYRSTB							16
 #define OP_INTERRUPT_STATUS_RESET_MDIO								17
+
+#define MACSEC_GLB_ISR_EGRESS_EVENTS				0
+#define MACSEC_GLB_ISR_INGRESS_EVENTS				1
+
+#define AIC_INTERRUPT_DROP_CLASS_EVENTS				0
+#define AIC_INTERRUPT_DROP_PP_EVENTS				1
+#define AIC_INTERRUPT_ENG_IRQ_EVENTS				2
+#define AIC_INTERRUPT_DROP_CC_EVENTS				3
+#define AIC_INTERRUPT_SA_PN_THR_EVENTS				4
+#define AIC_INTERRUPT_SA_EXPIRED_EVENTS				5
 
 
 
@@ -121,7 +130,13 @@ typedef enum {
 	Typical_xMII_3V3 =1, 
 	Typical_xMII_2V5 =2, 
 	Typical_xMII_1V8 =3
-} xMII_Voltage;
+} RGMII_Voltage;
+
+typedef enum {
+	TurnOn =1,
+	TurnOnWithFlowCtrlOn =2,
+	TurnOff=3,
+} Control;
 
 typedef enum {
 	Egress = 1, 
@@ -143,9 +158,9 @@ typedef enum {
 void wait_x_ms( u32 count ); 
 
 u8 RTL9010Bx_Initial_Configuration(void);
-u8 RTL9010Bx_Initial_with_EEE_Configuration(void);
 u8 RTL9010Bx_Initial_Configuration_Check(void);
-u8 RTL9010Bx_Initial_with_EEE_Configuration_Check(void);
+u8 RTL9010Bx_Initial_With_AN_Configuration(void);
+u8 RTL9010Bx_Initial_With_AN_Configuration_Check(void);
 u8 RTL9010Bx_GetLinkStatus(u8 SpeedType);
 u8 RTL9010Bx_Soft_Reset(void);
 u8 RTL9010Bx_CableFaultLocationAndDiagnosis(u16* cable_length);
@@ -171,13 +186,16 @@ u8 RTL9010Bx_Enable_rwake(void);
 u8 RTL9010Bx_Get_lwake_edge(void);
 u8 RTL9010Bx_Set_lwake_edge(u8 edge_select);
 u8 RTL9010Bx_Sleep_cap_check(void);
-u8 RTL9010Bx_xMII_driving_strength(u8 RGMII_Voltage);
+u8 RTL9000Cx_xMII_IO_Select(u8 RGMII_Voltage);
 u8 RTL9010Bx_PHY_ready(void);
 u8 RTL9010Bx_Get_PCS_status(u8 SpeedType);
 u8 RTL9010Bx_PCS_loopback(void);
 u8 RTL9010Bx_MDI_loopback(void);
 u8 RTL9010Bx_Remote_loopback(void);
 u8 RTL9010Bx_IOL_test(u8 TestMode_selection, u8 SpeedType);
+u8 RTL9010Bx_MACSEC_Interrupt_setting(void);
+u8 RTL9010Bx_MACSEC_GLB_Interrupt_Status(u32* MACSEC_GLB_ISR);
+u8 RTL9010Bx_MACSEC_AIC_Interrupt_Status(u32* MACSEC_AIC_STATUS);
 
 
 u8 RTL9010Bx_MACsec_Enable(u8 Control);
@@ -208,6 +226,8 @@ u32 RTL9010Bx_Ingress_MIBCounter_Decrypted_InPktsNotUsingSA(u8 SAK_n);
 u32 RTL9010Bx_Ingress_MIBCounter_Decrypted_InPktsUnusedSA(u8 SAK_n);
 u32 RTL9010Bx_Ingress_MIBCounter_Decrypted_InPktsUntaggedHit(u8 SAK_n);
 
-u8 RTL9010Bx_MACsec_Initial_Configuration_example(void);
+u8 RTL9010Bx_MACsec_Initial_Configuration_example_1(void);
+u8 RTL9010Bx_MACsec_Initial_Configuration_example_2(void);
+
 
 
