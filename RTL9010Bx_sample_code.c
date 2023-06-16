@@ -1,15 +1,13 @@
-//All functions can refer to RTL9010Bx_Sample_Code_Note_v0.1.pdf.
+//All functions can refer to RTL9010Bx_Sample_Code_Note_v0.2.pdf.
 
-#include "RTL9010Bx_sample_code.h"
+#include "RTL9010Bx_sample_code_v02.h"
 
-u16 param_check[12*3] = { 0x0bc4,21,0x1e3e,  0x0bc5,18,0x0199,  0x0bcc,16,0x767a,  0, 0x82c2,0x3e34, 
-                                               0, 0x82ff,0x3e34,  0, 0x8251,0x4481,  0, 0x828e, 0x4481,  0, 0x8266,0x801b, 
-                                               0, 0x826e,0x3400,  0, 0x8229,0xc81b,  0, 0x8231,0x2a00,  0x0ac4,16,0x0190 };
+u16 param_check[18] = { 0, 0x859C, 0x0609, 0, 0x85A2, 0x0300, 0, 0x85A4, 0x0F07, 0, 0xDC00, 0x1899, 
+                                             0x0A4C, 20, 0x2A2E,  0x0A49, 20, 0xFB00};
 
-u16 nc_param_check[14] = {0xf002, 0xf007, 0xd71e, 0x606b, 0xc060, 0x2cd6, 0xea43, 0xd71e, 0x606b, 0xc060, 0x2cd6, 0xea75, 0xA01A, 0x0000};
+u16 param2_check[24] = { 0, 0x859C, 0x0609,  0, 0x85A2, 0x0300,  0, 0x85A4, 0x0F07,  0, 0xDC00, 0x1899, 
+                         0x0A4C, 20, 0x2A2E,  0x0A49, 20, 0xFB00, 0x0A55, 17, 0xE302, 0xA54, 21, 0xFB05};
 
-u16 param_with_EEE_check[9*3] = { 0x0a4c,20,0x2a2e,  0x0a59,20,0x0003,  0x0a49,20,0xfb00,  0x0a42,22,0x0001, 
-	                                                      0x0ab5,20,0x0002,  0x0a48,23,0xa014,  0x0bcf,19,0x0069,  0x0bc0,17,0x7088,  0x0ac0,20,0x5320 };
 
 
 u8 RTL9010Bx_Initial_Configuration(void)
@@ -18,284 +16,31 @@ u8 RTL9010Bx_Initial_Configuration(void)
 	u32 timer = 2000;
 
 
-	mdio_write(31, 0x0bc4);
-	mdio_write(21, 0x1E3E);
-	mdio_write(31, 0x0bc5);
-	mdio_write(18, 0x0199);
-
-	mdio_write(31, 0x0bcc);
-	mdio_write(16, 0x767A);
-
-	mdio_write(27, 0x82C2);
-	mdio_write(28, 0x3E34);
-	mdio_write(27, 0x82FF);
-	mdio_write(28, 0x3E34);
-
-	mdio_write(27, 0x8251);
-	mdio_write(28, 0x4481);
-	mdio_write(27, 0x828E);
-	mdio_write(28, 0x4481);
-
-	mdio_write(27, 0x8266);
-	mdio_write(28, 0x801B);
-	mdio_write(27, 0x826E);
-	mdio_write(28, 0x3400);
-
-	mdio_write(27, 0x8229);
-	mdio_write(28, 0xC81B);
-	mdio_write(27, 0x8231);
-	mdio_write(28, 0x2A00);
-
-	mdio_write(31, 0x0ac4);
-	mdio_write(16, 0x190);
-
-	mdio_write(27, 0x859c);
-	mdio_write(28, 0x0509);
-	mdio_write(27, 0x859E);
-	mdio_write(28, 0x0003);
-	mdio_write(27, 0x85A0);
-	mdio_write(28, 0x0002);
-
-	mdio_write(27, 0xb820);
-	mdio_write(28, 0x0010);
-
-	mdio_write(27, 0xb830);
-	mdio_write(28, 0x8000);
-
-	mdio_write(27, 0xb800);
-	mdio_data = ((u16) mdio_read(28) & 0x0040);
-
-	while (mdio_data != 0x0040)	
-	{
-		mdio_data = ((u16) mdio_read(28) & 0x0040);
-		timer--;
-		if (timer == 0) {
-			return E_TIMOUT;
-		}
-	}
-
-	mdio_write(27, 0x8020);
-	mdio_write(28, 0x9100);
-
-	mdio_write(27, 0xb82e);
-	mdio_write(28, 0x0001);
-
-	mdio_write(27, 0xB820);
-	mdio_write(28, 0x0290);
-
-	mdio_write(27, 0xA012);
-	mdio_write(28, 0x0000);
-	mdio_write(27, 0xA014);
-	mdio_write(28, 0xF002);
-	mdio_write(28, 0xf007);
-	mdio_write(28, 0xd71e);
-	mdio_write(28, 0x606b);
-	mdio_write(28, 0xc060);
-	mdio_write(28, 0x2cd6);
-	mdio_write(28, 0xea43);
-	mdio_write(28, 0xd71e);
-	mdio_write(28, 0x606b);
-	mdio_write(28, 0xc060);
-	mdio_write(28, 0x2cd6);
-	mdio_write(28, 0xea75);
-	mdio_write(28, 0xA01A);
-	mdio_write(28, 0x0000);
-	mdio_write(27, 0xA00A);
-	mdio_write(28, 0x11ff);
-	mdio_write(27, 0xA008);
-	mdio_write(28, 0x11ff);
-	mdio_write(27, 0xA006);
-	mdio_write(28, 0x11ff);
-	mdio_write(27, 0xA004);
-	mdio_write(28, 0x11ff);
-	mdio_write(27, 0xA002);
-	mdio_write(28, 0x8a73);
-	mdio_write(27, 0xA000);
-	mdio_write(28, 0x8a41);
-	mdio_write(27, 0xB820);
-	mdio_write(28, 0x0210);
-
-	mdio_write(27, 0xb82e);
-	mdio_write(28, 0x0000);
-
-	mdio_write(27, 0x8020);
-	mdio_write(28, 0x0000);
-
-	mdio_write(27, 0xb820);
-	mdio_write(28, 0x0000);
-
-	mdio_write(27, 0xb800); 
-	mdio_data = ((u16) mdio_read(28) & 0x0040);
-	timer = 2000;
-
-	while (mdio_data == 0x0040)	
-	{
-		mdio_data = ((u16) mdio_read(28) & 0x0040);
-		timer--;
-		if (timer == 0) {
-			return E_TIMOUT;
-		}
-	}
-
-	mdio_write(0, 0x8000);	// PHY soft-reset
-	while (mdio_data != 0x0140){	// Check soft-reset complete
-		mdio_data = mdio_read(0);
-	}
-
-	return E_NOERR;
-}
-
-u8 RTL9010Bx_Initial_with_EEE_Configuration(void)
-{
-	u32 mdio_data = 0;
-	u32 timer = 2000;
-
-
-	mdio_write(31, 0x0bc4);
-	mdio_write(21, 0x1E3E);
-	mdio_write(31,0x0bc5);
-	mdio_write(18, 0x0199);
-
-	mdio_write(31, 0x0bcc);
-	mdio_write(16, 0x767A);
-
-	mdio_write(27, 0x82C2);
-	mdio_write(28, 0x3E34);
-	mdio_write(27, 0x82FF);
-	mdio_write(28, 0x3E34);
-
-	mdio_write(27, 0x8251);
-	mdio_write(28, 0x4481);
-	mdio_write(27, 0x828E);
-	mdio_write(28, 0x4481);
-
-	mdio_write(27, 0x8266);
-	mdio_write(28, 0x801B);
-	mdio_write(27, 0x826E);
-	mdio_write(28, 0x3400);
-
-	mdio_write(27, 0x8229);
-	mdio_write(28, 0xC81B);
-	mdio_write(27, 0x8231);
-	mdio_write(28, 0x2A00);
-
-	mdio_write(27, 0x859c);
-	mdio_write(28, 0x0509);
-	mdio_write(27, 0x859E);
-	mdio_write(28, 0x0003);
-	mdio_write(27, 0x85A0);
-	mdio_write(28, 0x0002);
-
-	mdio_write(31, 0x0ac4);
-	mdio_write(16, 0x190);
-
-	mdio_write(31, 0x0a4c);
+	mdio_write(27, 0x859C);
+	mdio_write(28, 0x0609);
+	mdio_write(27, 0x85A2);
+	mdio_write(28, 0x0300);
+	mdio_write(27, 0x85A4);
+	mdio_write(28, 0x0F07);
+	mdio_write(27, 0xDC00);
+	mdio_write(28, 0x1899);
+	mdio_write(31, 0x0A4C);
 	mdio_write(20, 0x2A2E);
-	mdio_write(31, 0x0a59);
-	mdio_write(20, 0x0003);
-	mdio_write(31, 0x0a49);
+	mdio_write(31, 0x0A49);
 	mdio_write(20, 0xFB00);
-	mdio_write(31, 0x0a42);
-	mdio_write(22, 0x0001);
-	mdio_write(31, 0x0ab5);
-	mdio_write(20, 0x0002);
-	mdio_write(31, 0x0a48);
-	mdio_write(23, 0xA014);
-	mdio_write(31, 0x0bcf);
-	mdio_write(19, 0x0069);
-	mdio_write(31, 0x0bc0);
-	mdio_write(17, 0x7088);
-	mdio_write(31, 0x0ac0);
-	mdio_write(20, 0x5320);
-
-	mdio_write(27, 0xb820);
-	mdio_write(28, 0x0010);
-
-	mdio_write(27, 0xb830);
-	mdio_write(28, 0x8000);
-
-	mdio_write(27, 0xb800);
-	mdio_data = ((u16) mdio_read(28) & 0x0040);
-
-	while (mdio_data != 0x0040)	
-	{
-		mdio_data = ((u16) mdio_read(28) & 0x0040);
-		timer--;
-		if (timer == 0) {
-			return E_TIMOUT;
-		}
-	}
-
-	mdio_write(27, 0x8020);
-	mdio_write(28, 0x9100);
-
-	mdio_write(27, 0xb82e);
-	mdio_write(28, 0x0001);
-
-	mdio_write(27, 0xB820);
-	mdio_write(28, 0x0290);
-
-	mdio_write(27, 0xA012);
-	mdio_write(28, 0x0000);
-	mdio_write(27, 0xA014);
-	mdio_write(28, 0xF002);
-	mdio_write(28, 0xf007);
-	mdio_write(28, 0xd71e);
-	mdio_write(28, 0x606b);
-	mdio_write(28, 0xc060);
-	mdio_write(28, 0x2cd6);
-	mdio_write(28, 0xea43);
-	mdio_write(28, 0xd71e);
-	mdio_write(28, 0x606b);
-	mdio_write(28, 0xc060);
-	mdio_write(28, 0x2cd6);
-	mdio_write(28, 0xea75);
-	mdio_write(28, 0xA01A);
-	mdio_write(28, 0x0000);
-	mdio_write(27, 0xA00A);
-	mdio_write(28, 0x11ff);
-	mdio_write(27, 0xA008);
-	mdio_write(28, 0x11ff);
-	mdio_write(27, 0xA006);
-	mdio_write(28, 0x11ff);
-	mdio_write(27, 0xA004);
-	mdio_write(28, 0x11ff);
-	mdio_write(27, 0xA002);
-	mdio_write(28, 0x8a73);
-	mdio_write(27, 0xA000);
-	mdio_write(28, 0x8a41);
-	mdio_write(27, 0xB820);
-	mdio_write(28, 0x0210);
-
-	mdio_write(27, 0xb82e);
-	mdio_write(28, 0x0000);
-
-	mdio_write(27, 0x8020);
-	mdio_write(28, 0x0000);
-
-	mdio_write(27, 0xb820);
-	mdio_write(28, 0x0000);
-
-	mdio_write(27, 0xb800);
-	mdio_data = ((u16) mdio_read(28) & 0x0040);
-	timer = 2000;
-
-	while (mdio_data == 0x0040)	
-	{
-		mdio_data = ((u16) mdio_read(28) & 0x0040);
-		timer--;
-		if (timer == 0) {
-			return E_TIMOUT;
-		}
-	}
-
+	
 	mdio_write(0, 0x8000);	// PHY soft-reset
-	while (mdio_data != 0x0140){	// Check soft-reset complete
+	do{	// Check soft-reset complete
 		mdio_data = mdio_read(0);
-	}
+	}while (mdio_data != 0x0140);
+	timer--;
+		if (timer == 0) {
+			return E_TIMOUT;
+		}
 
 	return E_NOERR;
 }
+	
 
 
 u8 RTL9010Bx_Initial_Configuration_Check(void)
@@ -308,7 +53,7 @@ u8 RTL9010Bx_Initial_Configuration_Check(void)
 	u32 timer = 2000;
 
 
-	for (i = 0; i < 12 * 3; i = i + 3)
+	for (i = 0; i < 18; i = i + 3)
 	{
 		page = param_check[i];
 		mdio_data_chk = param_check[i + 2];
@@ -329,58 +74,56 @@ u8 RTL9010Bx_Initial_Configuration_Check(void)
 			DBGMSG(("%dth param error page=0x%04X reg=0x%04X data=0x%04X\r\n", i / 3, page, reg, mdio_data));
 			return E_FAILED;
 		}
-	}
-
-	mdio_write(27, 0xb820);
-	mdio_write(28, 0x0010);
-
-	mdio_write(27, 0xb830);
-	mdio_write(28, 0x8000);
-
-	mdio_write(27, 0xb800);
-	mdio_data = ((u16) mdio_read(28) & 0x0040);
-
-	while (mdio_data != 0x0040)	
-	{
-		mdio_data = ((u16) mdio_read(28) & 0x0040);
+	}	
+		
 		timer--;
 		if (timer == 0) {
 			return E_TIMOUT;
 		}
-	}
-
-	mdio_write(31, 0xa01);
-	for(i=0; i<14; i++){
-		reg = nc_param_check[i];
-		mdio_write(17, i);
-		mdio_data = mdio_read(18);
-		if (reg != mdio_data)
-		{
-			DBGMSG(("%dth nctl param error data=0x%04X  expected_data=0x%04X\r\n", i, mdio_data, reg));
-			return E_FAILED;
-		}
-	}
-
-	mdio_write(27, 0xb820);
-	mdio_write(28, 0x0000);
-
-	mdio_write(27, 0xb800);
-	mdio_data = ((u16) mdio_read(28) & 0x0040);
-	timer = 2000;
-
-	while (mdio_data == 0x0040)	
-	{
-		mdio_data = ((u16) mdio_read(28) & 0x0040);
-		timer--;
-		if (timer == 0) {
-			return E_TIMOUT;
-		}
-	}
+					
 
 	return E_NOERR;
 }
 
-u8 RTL9010Bx_Initial_with_EEE_Configuration_Check(void)
+
+u8 RTL9010Bx_Initial_With_AN_Configuration(void)
+{
+	u32 mdio_data = 0;
+	u32 timer = 2000;
+
+
+	mdio_write(27, 0x859C);
+	mdio_write(28, 0x0609);
+	mdio_write(27, 0x85A2);
+	mdio_write(28, 0x0300);
+	mdio_write(27, 0x85A4);
+	mdio_write(28, 0x0F07);
+	mdio_write(27, 0xDC00);
+	mdio_write(28, 0x1899);
+	mdio_write(31, 0x0A4C);
+	mdio_write(20, 0x2A2E);
+	mdio_write(31, 0x0A49);
+	mdio_write(20, 0xFB00);
+	mdio_write(31, 0x0A55);
+	mdio_write(17, 0xE302);
+	mdio_write(31, 0x0A54);
+	mdio_write(21, 0xFB05);
+
+	mdio_write(0, 0x8000);	// PHY soft-reset
+	do{	// Check soft-reset complete
+		mdio_data = mdio_read(0);
+	}while (mdio_data != 0x0140);
+	timer--;
+		if (timer == 0) {
+			return E_TIMOUT;
+		}
+
+	return E_NOERR;
+}
+
+	
+
+u8 RTL9010Bx_Initial_With_AN_Configuration_Check(void)
 {
 	u16 mdio_data = 0;
 	u16 mdio_data_chk = 0;
@@ -390,11 +133,11 @@ u8 RTL9010Bx_Initial_with_EEE_Configuration_Check(void)
 	u32 timer = 2000;
 
 
-	for (i = 0; i < 12 * 3; i = i + 3)
+	for (i = 0; i < 24; i = i + 3)
 	{
-		page = param_check[i];
-		mdio_data_chk = param_check[i + 2];
-		reg = param_check[i + 1];
+		page = param2_check[i];
+		mdio_data_chk = param2_check[i + 2];
+		reg = param2_check[i + 1];
 		if (page == 0)
 		{
 			mdio_write(27, reg);
@@ -413,77 +156,16 @@ u8 RTL9010Bx_Initial_with_EEE_Configuration_Check(void)
 		}
 	}
 
-
-	for (i = 0; i < 9 * 3; i = i + 3)
-	{
-		page = param_with_EEE_check[i];
-		mdio_data_chk = param_with_EEE_check[i + 2];
-		reg = param_with_EEE_check[i + 1];
-		if (page == 0)
-		{
-			mdio_write(27, reg);
-			mdio_data = mdio_read(28);
-		}
-		else
-		{
-			mdio_write(31, page);
-			mdio_data = mdio_read(reg);
-		}
-
-		if (mdio_data_chk != mdio_data)
-		{
-			DBGMSG(("%dth EEE param error page=0x%04X reg=0x%04X data=0x%04X\r\n", i / 3, page, reg, mdio_data));
-			return E_FAILED;
-		}
-	}
-
-	mdio_write(27, 0xb820);
-	mdio_write(28, 0x0010);
-	mdio_write(27, 0xb830);
-	mdio_write(28, 0x8000);
-
-	mdio_write(27, 0xb800);
-	mdio_data = ((u16) mdio_read(28) & 0x0040);
-
-	while (mdio_data != 0x0040)	
-	{
-		mdio_data = ((u16) mdio_read(28) & 0x0040);
+	
 		timer--;
 		if (timer == 0) {
 			return E_TIMOUT;
 		}
-	}
-
-	mdio_write(31, 0xa01);
-	for(i=0; i<14; i++){
-		reg = nc_param_check[i];
-		mdio_write(17, i);
-		mdio_data = mdio_read(18);
-		if (reg != mdio_data)
-		{
-			DBGMSG(("%dth nctl param error data=0x%04X  expected_data=0x%04X\r\n", i, mdio_data, reg));
-			return E_FAILED;
-		}
-	}
-
-	mdio_write(27, 0xb820);
-	mdio_write(28, 0x0000);
-
-	mdio_write(27, 0xb800); 
-	mdio_data = ((u16) mdio_read(28) & 0x0040);
-	timer = 2000;
-
-	while (mdio_data == 0x0040)	
-	{
-		mdio_data = ((u16) mdio_read(28) & 0x0040);
-		timer--;
-		if (timer == 0) {
-			return E_TIMOUT;
-		}
-	}
+	
 
 	return E_NOERR;
 }
+
 
 
 u8 RTL9010Bx_GetLinkStatus(u8 SpeedType) 
@@ -542,10 +224,10 @@ u8 RTL9010Bx_CableFaultLocationAndDiagnosis(u16* cable_length)
 	mdio_write(17, 0x0001); //RTCTCR: bit0 = 1,rtct_en, enable RTCT and start to test
 
 	//Wait RTCT finished
-	while (mdio_data != 0x8000){   //RTCTCR: bit15 = 1, check RTCT is finished
+	do{   //RTCTCR: bit15 = 1, check RTCT is finished
 		mdio_data = mdio_read(17);
 		mdio_data = mdio_data & 0x8000;
-	}
+	}while (mdio_data != 0x8000);
 
 	//Get channel status and cable length
 	mdio_write(31, 0x0A43);    //write reg31,page select register
@@ -557,6 +239,7 @@ u8 RTL9010Bx_CableFaultLocationAndDiagnosis(u16* cable_length)
 	//normal mode
 	if (cable_st == 0x6000) {
 		*cable_length = 0xFFFF; // Cable is normal.
+		DBGMSG(("Cable status is normal.\r\n"));
 		return CABLE_NORMAL;
 	}
 
@@ -566,14 +249,19 @@ u8 RTL9010Bx_CableFaultLocationAndDiagnosis(u16* cable_length)
 		mdio_data = mdio_read(28);
 		mdio_data = mdio_data * 2 / 15;
 		*cable_length = (mdio_data & 0xFFFF);
+		DBGMSG(("Cable status is open.\r\n"));
 		return CABLE_OPEN;
 	}
 
 	if (cable_st == 0x5000){
+		DBGMSG(("Cable status is short.\r\n"));
 		return CABLE_SHORT;
 	}
-
+	else
+	{
+	DBGMSG(("Cable status is unknown.\r\n"));
 	return CABLE_UNKNOWN;
+	}
 }
 
 u8 RTL9010Bx_Soft_Reset(void)
@@ -583,7 +271,7 @@ u8 RTL9010Bx_Soft_Reset(void)
 
 	mdio_write(0, 0x8000);	// PHY soft-reset
 
-	while (mdio_data != 0x0140){	// Check soft-reset complete
+	do{	// Check soft-reset complete
 
 		mdio_data = mdio_read(0);
 		if(mdio_data == 0xFFFF)
@@ -593,7 +281,7 @@ u8 RTL9010Bx_Soft_Reset(void)
 		if (timer == 0){
 			return E_TIMOUT;
 		}
-	}
+	}while (mdio_data != 0x0140);
 
 	return E_NOERR;
 }
@@ -623,7 +311,7 @@ u8 RTL9010Bx_Check_Linkup(void)
 	u32 counter = 1000;   //the value of counter is dynamic
 
 
-	while (0x0004 != (mdio_data & 0x0004)){
+	do{
 		counter--;
 		mdio_data = mdio_read(1);
 		mdio_data = mdio_read(1); //BMSR:bit2 = 1 linked; bit2 = 0 not linked, read this reg twice for the current link status
@@ -632,7 +320,8 @@ u8 RTL9010Bx_Check_Linkup(void)
 		if (0 == counter)
 			return E_TIMOUT;
 
-	}
+	}while (mdio_data != 0xD);
+	
 
 	return E_NOERR;
 }
@@ -758,6 +447,12 @@ u8 RTL9010Bx_General_Interrupt_status(u16* general_int_status)
 		DBGMSG(("PHY Fatal Error occured\r\n"));
 		BIT_SET((*general_int_status),GENERAL_INTERRUPT_STATUS_PHY_FATAL_ERROR);
 	}
+
+	if (BIT_TST(mdio_data,12)){//MACsec interrupt
+		DBGMSG(("MACsec event occured\r\n"));
+		BIT_SET((*general_int_status),GENERAL_INTERRUPT_STATUS_MACSEC_EVENT);
+	}
+
 
 	return E_NOERR;
 }
@@ -1059,11 +754,20 @@ u8 RTL9010Bx_Get_OP_state(void)
 		return OP_STATE_UNKNOWN;
 
 	if((mdio_data&0xff) == 0x20)
+		{
+		DBGMSG(("OP state = Standby.\r\n"));
 		return OP_STATE_STANDBY;
+		}
 	else if((mdio_data&0xff) == 0x30)
+		{
+		DBGMSG(("OP state = Normal.\r\n"));
 		return OP_STATE_NORMAL;
+		}
 	else if((mdio_data&0xff) == 0x31)
+		{
+		DBGMSG(("OP state = Safety.\r\n"));
 		return OP_STATE_SAFETY;
+		}
 	else
 		return OP_STATE_UNKNOWN;
 }
@@ -1133,7 +837,7 @@ u8 RTL9010Bx_Sleep_cap_check(void)
 
 }
 
-u8 RTL9010Bx_xMII_driving_strength(u8 RGMII_Voltage)
+u8 RTL9010Bx_xMII_IO_Select(u8 RGMII_Voltage)
 {
 	u32 mdio_data = 0;
 
@@ -1151,39 +855,7 @@ u8 RTL9010Bx_xMII_driving_strength(u8 RGMII_Voltage)
 			mdio_write(31, 0x0a4c);
 			mdio_write(18, mdio_data);
 
-			wait_x_ms(500);
-
-			mdio_write(31, 0x0d41);
-			mdio_data = mdio_read(18);
-
-			BIT_CLR(mdio_data, 12); // rg_pad_rxd0_e2
-			BIT_SET(mdio_data, 10); // rg_pad_rxd0_sr
-			BIT_CLR(mdio_data, 4); // rg_pad_rxd1_e2
-			BIT_SET(mdio_data, 2); // rg_pad_rxd1_sr
-			mdio_write(18, mdio_data);
-
-			mdio_data = mdio_read(19);
-
-			BIT_CLR(mdio_data, 12); // rg_pad_rxd2_e2
-			BIT_SET(mdio_data, 10); // rg_pad_rxd2_sr
-			BIT_CLR(mdio_data, 4); // rg_pad_rxd3_e2
-			BIT_SET(mdio_data, 2); // rg_pad_rxd3_sr
-			mdio_write(19, mdio_data);
-
-			mdio_data = mdio_read(20);
-
-			BIT_CLR(mdio_data, 12); // rg_pad_rxdv_e2
-			BIT_SET(mdio_data, 10); // rg_pad_rxdv_sr
-			mdio_write(20, mdio_data);
-
-			mdio_data = mdio_read(21);
-
-			BIT_CLR(mdio_data, 12); // rg_pad_rxc_e2
-			BIT_SET(mdio_data, 10); // rg_pad_rxc_sr
-			mdio_write(21, mdio_data);
-
-			mdio_write(31, 0x0d42);
-			mdio_write(23, 0x057f);
+			
 			break;
 
 		case Typical_xMII_2V5:
@@ -1192,39 +864,7 @@ u8 RTL9010Bx_xMII_driving_strength(u8 RGMII_Voltage)
 			mdio_write(31, 0x0a4c);
 			mdio_write(18, mdio_data);
 
-			wait_x_ms(500);
-
-			mdio_write(31, 0x0d41);
-			mdio_data = mdio_read(18);
-
-			BIT_CLR(mdio_data, 12); // rg_pad_rxd0_e2
-			BIT_SET(mdio_data, 10); // rg_pad_rxd0_sr
-			BIT_CLR(mdio_data, 4); // rg_pad_rxd1_e2
-			BIT_SET(mdio_data, 2); // rg_pad_rxd1_sr
-			mdio_write(18, mdio_data);
-
-			mdio_data = mdio_read(19);
-
-			BIT_CLR(mdio_data, 12); // rg_pad_rxd2_e2
-			BIT_SET(mdio_data, 10); // rg_pad_rxd2_sr
-			BIT_CLR(mdio_data, 4); // rg_pad_rxd3_e2
-			BIT_SET(mdio_data, 2); // rg_pad_rxd3_sr
-			mdio_write(19, mdio_data);
-
-			mdio_data = mdio_read(20);
-
-			BIT_CLR(mdio_data, 12); // rg_pad_rxdv_e2
-			BIT_SET(mdio_data, 10); // rg_pad_rxdv_sr
-			mdio_write(20, mdio_data);
-
-			mdio_data = mdio_read(21);
-
-			BIT_CLR(mdio_data, 12); // rg_pad_rxc_e2
-			BIT_SET(mdio_data, 10); // rg_pad_rxc_sr
-			mdio_write(21, mdio_data);
-
-			mdio_write(31, 0x0d42);
-			mdio_write(23, 0x057f);
+			
 			break;
 
 		case Typical_xMII_1V8:
@@ -1233,39 +873,7 @@ u8 RTL9010Bx_xMII_driving_strength(u8 RGMII_Voltage)
 			mdio_write(31, 0x0a4c);
 			mdio_write(18, mdio_data);
 
-			wait_x_ms(500);
-
-			mdio_write(31, 0x0d41);
-			mdio_data = mdio_read(18);
-
-			BIT_CLR(mdio_data, 12); // rg_pad_rxd0_e2
-			BIT_SET(mdio_data, 10); // rg_pad_rxd0_sr
-			BIT_CLR(mdio_data, 4); // rg_pad_rxd1_e2
-			BIT_SET(mdio_data, 2); // rg_pad_rxd1_sr
-			mdio_write(18, mdio_data);
-
-			mdio_data = mdio_read(19);
-
-			BIT_CLR(mdio_data, 12); // rg_pad_rxd2_e2
-			BIT_SET(mdio_data, 10); // rg_pad_rxd2_sr
-			BIT_CLR(mdio_data, 4); // rg_pad_rxd3_e2
-			BIT_SET(mdio_data, 2); // rg_pad_rxd3_sr
-			mdio_write(19, mdio_data);
-
-			mdio_data = mdio_read(20);
-
-			BIT_CLR(mdio_data, 12); // rg_pad_rxdv_e2
-			BIT_SET(mdio_data, 10); // rg_pad_rxdv_sr
-			mdio_write(20, mdio_data);
-
-			mdio_data = mdio_read(21);
-
-			BIT_CLR(mdio_data, 12); // rg_pad_rxc_e2
-			BIT_SET(mdio_data, 10); // rg_pad_rxc_sr
-			mdio_write(21, mdio_data);
-
-			mdio_write(31, 0x0d42);
-			mdio_write(23, 0x057f);
+			
 			break;
 
 		default:
@@ -1280,7 +888,7 @@ u8 RTL9010Bx_PHY_ready(void)
 	u32 mdio_data = 0;
 	u32 timer = 2000;
 
-	while (mdio_data!=0x0003){
+	do{
 		mdio_write(0x1f, 0x0a42);
 		mdio_data = mdio_read(0x10);
 		mdio_data = mdio_data & 0x0007;
@@ -1290,7 +898,7 @@ u8 RTL9010Bx_PHY_ready(void)
 			DBGMSG(("PHY NOT ready!!! Reg(16) = 0x%04X\r\n", (u16)mdio_data));
 			return E_TIMOUT;
 		}
-	}
+	}while (mdio_data!=0x0003);
 
 	DBGMSG(("PHY ready!!! Reg(16) = 0x%04X\r\n", (u16)mdio_data));
 	return E_NOERR;
@@ -1310,7 +918,7 @@ u8 RTL9010Bx_Get_PCS_status(u8 SpeedType)
 
 	if(SpeedType == Speed_100BaseT1){
 		switch (mdio_data){
-			case 0x40://Disable Transmitter State
+			case 0x00://Disable Transmitter State
 				DBGMSG(("disable transmitter state\r\n"));
 				pcs_state = PCS_STATE_DISABLE_TRANSMITTER;
 				break;
@@ -1415,6 +1023,7 @@ u8 RTL9010Bx_Remote_loopback(void)
 u8 RTL9010Bx_IOL_test(u8 TestMode_selection, u8 SpeedType)
 {
 	u32 mdio_data = 0;
+	u32 mdio_data1 = 0;
 
 	mdio_data = mdio_read(0x09);
 	if(mdio_data == 0xFFFF)
@@ -1423,6 +1032,27 @@ u8 RTL9010Bx_IOL_test(u8 TestMode_selection, u8 SpeedType)
 	if(SpeedType == Speed_1000BaseT1){
 		DBGMSG(("Speed_1000BaseT1\r\n"));
 		switch(TestMode_selection){
+
+			case 1://Test Mode1
+				DBGMSG(("Test Mode 1\r\n"));
+				mdio_write(0x09, (mdio_data & 0x1FFF) | 0x2000);//set reg PHYCR bit15:13 = 001
+
+				/* Output TX_CLK to PTP_GPIO setting: */
+				mdio_write(27, 0xbc52); 
+				mdio_data1 = mdio_read(28);
+				BIT_CLR(mdio_data1, 2); // 0:Master side, 1: Slave side
+				//For Master, set '0' to bit[2]; for slave, set '1' to bit[2]. For Sync clock, set '0' to bit[2].
+				BIT_CLR(mdio_data1, 3); // set CLK 125MHz
+				BIT_SET(mdio_data1, 4); //enable to ATP/ATN
+				BIT_SET(mdio_data1, 14); //output buffer for ATP/ATN
+				mdio_write(27, 0xbc52); 
+				mdio_write(28, mdio_data1);
+
+				mdio_write(27, 0xd012); 
+				mdio_write(28,0x0060); //disable SSC
+				/* END */
+
+				break;
 
 			case 2://Test Mode2
 				DBGMSG(("Test Mode 2\r\n"));
@@ -1452,7 +1082,33 @@ u8 RTL9010Bx_IOL_test(u8 TestMode_selection, u8 SpeedType)
 		DBGMSG(("Speed_100BaseT1\r\n"));
 		mdio_write(0x1f,0xA59);
 		mdio_data = mdio_read(17);
+		if(mdio_data == 0xFFFF)
+		return E_NOTRDY;
+
 		switch(TestMode_selection){
+
+			case 0://Test Mode0 (Normal mode)
+				DBGMSG(("Test Mode 0\r\n"));
+				mdio_write(17, (mdio_data & 0x1FFF) | 0x0000);//set reg PHYCR bit15:13 = 000
+				
+				/* Output TX_CLK to PTP_GPIO setting: */
+				mdio_write(27,0xbc5c);
+				mdio_write(28,0x0200); //read clear
+			
+				mdio_write(27,0xbc52);
+				mdio_write(28,0x13C3);
+			
+				mdio_write(27,0xbcf8);
+				mdio_write(28,0x0077); 
+			
+				mdio_write(27,0xd41e);
+				mdio_write(28,0x802C);
+			
+				mdio_write(27,0xd012);
+				mdio_write(28,0x0060); //disable SSC
+			 
+			  	/* END */
+				break;
 
 			case 1://Test Mode1
 				DBGMSG(("Test Mode 1\r\n"));
@@ -1485,20 +1141,193 @@ u8 RTL9010Bx_IOL_test(u8 TestMode_selection, u8 SpeedType)
 	return E_NOERR;
 }
 
+u8 RTL9010Bx_MACSEC_Interrupt_setting(void)
+{	
+	u32 mdio_data = 0;
+	
+	//setting GINER,GINMR, and read clear GINSR
+	RTL9010Bx_General_Interrupt_setting();
+	
+	//Enable MACSEC_GLB_IMR
+	mdio_write(0x1F,0x0D80);
+	mdio_data = mdio_read(0x12);
+	BIT_SET(mdio_data, 0); //Enable MACSEC IP's 'Egress' interrupt output
+	BIT_SET(mdio_data, 8); //Enable MACSEC IP's 'Ingress' interrupt output
+	mdio_write(0x12, mdio_data);
+	
+	//Enable AIC_Interrupt
+	RTL9010Bx_MACsec_Egress_Write(0xF80C, 0x00003FFF); //Enable AIC interrupt in Egress from bit 0 to 9
+	RTL9010Bx_MACsec_Ingress_Write(0xF80C, 0x00003FFF); //Enable AIC interrupt in Ingress from bit 0 to 9
+	
+	//Clear AIC interrupts: Not Read Clear; but to write '1' in corresponding triggered bits (cleared all [9:0] bits here)
+	RTL9010Bx_MACsec_Egress_Write(0xF810, 0x00003FFF); //Clear AIC interrupt in Egress from bit 0 to 9
+	RTL9010Bx_MACsec_Egress_Read(0xF80C); //Check if AIC interrupt bits in Egress are cleared or not
+	
+	RTL9010Bx_MACsec_Ingress_Write(0xF810, 0x00003FFF); //Clear AIC interrupt in Ingress from bit 0 to 9
+	RTL9010Bx_MACsec_Ingress_Read(0xF80C); //Check if AIC interrupt bits in Ingress are cleared or not
+	
+	//Clear MACSEC_GLB_ISR
+	mdio_write(0x1F,0x0D80);
+	mdio_data = mdio_read(0x14);
+	BIT_SET(mdio_data, 0); //Clear MACSEC IP's 'Egress' interrupt output by write '1' again
+	BIT_SET(mdio_data, 8); //Clear MACSEC IP's 'Ingress' interrupt output by write '1' again
+	mdio_write(0x14, mdio_data);
+	
+	mdio_write(0x1F,0x0D80);
+	mdio_data = mdio_read(0x14); //Check if GLB_ISR is cleared or not
+	
+	
+	return E_NOERR;
+}
+
+u8 RTL9010Bx_MACSEC_GLB_Interrupt_Status(u32* MACSEC_GLB_ISR)
+{
+	u32 mdio_data = 0;
+	//Enable MACSEC_GLB_IMR first.
+	//If GINSR bit[12] = 1, refer to RTL9010Bx_General_Interrupt_status(u16* general_int_status).
+	//Then read MACSEC_GLB_ISR.
+	
+
+	
+	mdio_write(0x1F, 0x0D80); //read MACSEC_GLB_ISR
+	mdio_data = mdio_read(0x14);
+	if(mdio_data == 0xFFFF)
+		return E_NOTRDY;
+	
+	DBGMSG(("MACSEC_GLB_ISR = 0x%04X\r\n", mdio_data));
+
+	//analyze mdio_data->MACSEC_GLB_ISR
+
+	if (BIT_TST(mdio_data, 0)){
+		DBGMSG(("MACSEC IP's interrupt events occurred at Egress block\r\n"));
+		BIT_SET(*MACSEC_GLB_ISR, MACSEC_GLB_ISR_EGRESS_EVENTS);
+	}
+	if (BIT_TST(mdio_data, 8)){
+		DBGMSG(("MACSEC IP's interrupt events occurred at Ingress block\r\n"));
+		BIT_SET(*MACSEC_GLB_ISR, MACSEC_GLB_ISR_INGRESS_EVENTS);
+	}
+	
+	return E_NOERR;
+}
+
+
+u8 RTL9010Bx_MACSEC_AIC_Interrupt_Status(u32* MACSEC_AIC_STATUS)
+{
+	u32 mdio_data0 = 0;
+	u32 mdio_data1 = 0;
+	//Enable MACSEC_GLB_IMR and AIC_Interrupt first.
+	//If GINSR bit[12] = 1, refer to RTL9010Bx_General_Interrupt_status(u16* general_int_status).
+	//Read MACSEC_GLB_ISR, refer to RTL9010Bx_MACSEC_GLB_Interrupt_Status(u32* MACSEC_GLB_ISR).
+	//Then Read AIC_Interrupt_Status.
+	
+	
+	
+	mdio_data0 = RTL9010Bx_MACsec_Egress_Read(0xF80C);//read AIC_Interrupt_status in Egress
+	if(mdio_data0 == 0xFFFFFFFF)
+		return E_NOTRDY;
+	
+	DBGMSG(("AIC_Interrupt_status in Egress = 0x%08X\r\n", mdio_data0));
+
+	//analyze mdio_data0 -> AIC_Interrupt_Status in Egress
+
+	if (BIT_TST(mdio_data0, 0)){
+		DBGMSG(("Packet drop pulse from classification logic\r\n"));
+		BIT_SET(*MACSEC_AIC_STATUS, AIC_INTERRUPT_DROP_CLASS_EVENTS);
+	}
+	if (BIT_TST(mdio_data0, 1)){
+		DBGMSG(("Packet drop pulse from post-processor logic\r\n"));
+		BIT_SET(*MACSEC_AIC_STATUS, AIC_INTERRUPT_DROP_PP_EVENTS);
+	}
+	if (BIT_TST(mdio_data0, 3)){
+		DBGMSG(("Interrupt pulse from MACsec crypto-engine core\r\n"));
+		BIT_SET(*MACSEC_AIC_STATUS, AIC_INTERRUPT_ENG_IRQ_EVENTS);
+	}
+	if (BIT_TST(mdio_data0, 7)){
+		DBGMSG(("Packet drop pulse from consistency checking logic\r\n"));
+		BIT_SET(*MACSEC_AIC_STATUS, AIC_INTERRUPT_DROP_CC_EVENTS);  //Ingress only
+	}
+	if (BIT_TST(mdio_data0, 8)){
+		DBGMSG(("Pulse from post processor\r\n"));
+		BIT_SET(*MACSEC_AIC_STATUS, AIC_INTERRUPT_SA_PN_THR_EVENTS);
+	}
+	if (BIT_TST(mdio_data0, 9)){
+		DBGMSG(("Pulse from classifier\r\n"));
+		BIT_SET(*MACSEC_AIC_STATUS, AIC_INTERRUPT_SA_EXPIRED_EVENTS);
+	}
+	
+	
+	mdio_data1 = RTL9010Bx_MACsec_Ingress_Read(0xF80C);//read AIC_Interrupt_status in Ingress
+	if(mdio_data1 == 0xFFFFFFFF)
+		return E_NOTRDY;
+	
+	DBGMSG(("AIC_Interrupt_status in Ingress = 0x%08X\r\n", mdio_data1));
+
+	//analyze mdio_data1 -> AIC_Interrupt_Status in Ingress
+
+	if (BIT_TST(mdio_data1, 0)){
+		DBGMSG(("Packet drop pulse from classification logic\r\n"));
+		BIT_SET(*MACSEC_AIC_STATUS, AIC_INTERRUPT_DROP_CLASS_EVENTS);
+	}
+	if (BIT_TST(mdio_data1, 1)){
+		DBGMSG(("Packet drop pulse from post-processor logic\r\n"));
+		BIT_SET(*MACSEC_AIC_STATUS, AIC_INTERRUPT_DROP_PP_EVENTS);
+	}
+	if (BIT_TST(mdio_data1, 3)){
+		DBGMSG(("Interrupt pulse from MACsec crypto-engine core\r\n"));
+		BIT_SET(*MACSEC_AIC_STATUS, AIC_INTERRUPT_ENG_IRQ_EVENTS);
+	}
+	if (BIT_TST(mdio_data1, 7)){
+		DBGMSG(("Packet drop pulse from consistency checking logic\r\n"));
+		BIT_SET(*MACSEC_AIC_STATUS, AIC_INTERRUPT_DROP_CC_EVENTS);
+	}
+	if (BIT_TST(mdio_data1, 8)){
+		DBGMSG(("Pulse from post processor\r\n"));
+		BIT_SET(*MACSEC_AIC_STATUS, AIC_INTERRUPT_SA_PN_THR_EVENTS);  //Egress only
+	}
+	if (BIT_TST(mdio_data1, 9)){
+		DBGMSG(("Pulse from classifier\r\n"));
+		BIT_SET(*MACSEC_AIC_STATUS, AIC_INTERRUPT_SA_EXPIRED_EVENTS);  //Egress only
+	}
+	
+	return E_NOERR;
+}
+
+
 
 u8 RTL9010Bx_MACsec_Enable(u8 Control)
 {
 	u32 mdio_data = 0;
 
-	// Set MACsec Enable or Disable //
-	mdio_write(31, 0x0D01);
-	mdio_data = mdio_read(17);
-	if(TurnOn == Control)
-		BIT_SET(mdio_data, 4);
-	else
-		BIT_CLR(mdio_data, 4);
+	switch(Control){
 
-	mdio_write(17, mdio_data);
+		case 1: //MACsec Enable with Flow control OFF 
+			mdio_write(31, 0x0D01);
+			mdio_data = mdio_read(17);
+			BIT_SET(mdio_data, 4);
+			BIT_CLR(mdio_data, 3);
+			mdio_write(17, mdio_data);
+			break;
+
+		case 2: //MACsec Enable with Flow control ON
+			mdio_write(31, 0x0D01);
+			mdio_data = mdio_read(17);
+			BIT_SET(mdio_data, 4);
+			BIT_SET(mdio_data, 3);
+			mdio_write(17, mdio_data);
+			break;
+
+		case 3: //MACsec disable
+			mdio_write(31, 0x0D01);
+			mdio_data = mdio_read(17);
+			BIT_CLR(mdio_data, 4);
+			BIT_CLR(mdio_data, 3);
+			mdio_write(17, mdio_data);
+			break;
+
+		default: 
+			break;
+
+	}
 
 	return E_NOERR;
 }
@@ -1513,7 +1342,7 @@ u8 RTL9010Bx_MACsec_Egress_Check_Access_Correct(void)
 
 	reg_value = mdio_read(17);  // read 15~0 bits of register.
 
-	DBGMSG(("Get Egress Reg[0xFFFC] =  0x%08X \r\n", reg_value));
+	printf("Get Egress Reg[0xFFFC] =  0x%08X \r\n", reg_value);
 
 	if(0x5FA0 == reg_value)
 		return E_NOERR;
@@ -1532,7 +1361,7 @@ u8 RTL9010Bx_MACsec_Ingress_Check_Access_Correct(void)
 
 	reg_value = mdio_read(22);  // read 15~0 bits of register.
 
-	DBGMSG(("Get Ingress Reg[0xFFFC] =  0x%08X \r\n", reg_value));
+	printf("Get Ingress Reg[0xFFFC] =  0x%08X \r\n", reg_value);
 
 	if(0x5FA0 == reg_value)
 		return E_NOERR;
@@ -1807,10 +1636,10 @@ u32 RTL9010Bx_Ingress_MIBCounter_Decrypted_InPktsUntaggedHit(u8 SAK_n)
 }
 
 
-u8 RTL9010Bx_MACsec_Initial_Configuration_example(void)
+u8 RTL9010Bx_MACsec_Initial_Configuration_example_1(void)
 {
 	// Step 1. Set MACsec enable
-	RTL9010Bx_MACsec_Enable(TurnOn);
+	RTL9010Bx_MACsec_Enable(2);
 
 	// Step 2. Initial Setting for MACsec Egress Block
 	RTL9010Bx_MACsec_Egress_Write(0xC810, 0x0000000C);
@@ -1820,6 +1649,10 @@ u8 RTL9010Bx_MACsec_Initial_Configuration_example(void)
 
 	// Non-match packet flow, set as bypass
 	RTL9010Bx_MACsec_Egress_Write(0x7944, 0x010101C1);
+
+	// Control packet flow
+	// Destination port is Common, bit[7:6], CRC = 0, internal drop = 2, bypass = 3.
+	RTL9010Bx_MACsec_Egress_Write(0x7948, 0x01010101);
 
 	RTL9010Bx_MACsec_Egress_Write(0xF100, 0x00003FFF);
 	RTL9010Bx_MACsec_Egress_Write(0xF120, 0x00003FFF);
@@ -1843,14 +1676,14 @@ u8 RTL9010Bx_MACsec_Initial_Configuration_example(void)
 	RTL9010Bx_MACsec_Egress_Write(0x0014, 0x45B306B5);
 
 	// SAK-1 H-key setting, Hash ytansform of the MACsec SA key
-	// H(SAK) = 72 A2 3D 80 - 12 1D E2 D5 - A8 50 25 3F - CF 43 12 0E.
+	// H(SAK) = 73 A2 3D 80 - 12 1D E2 D5 - A8 50 25 3F - CF 43 12 0E.
 	RTL9010Bx_MACsec_Egress_Write(0x0018, 0x803DA273);
 	RTL9010Bx_MACsec_Egress_Write(0x001C, 0xD5E21D12);
 	RTL9010Bx_MACsec_Egress_Write(0x0020, 0x3F2550A8);
 	RTL9010Bx_MACsec_Egress_Write(0x0024, 0x0E1243CF);
 
-	// Packet number of SAK-1.
-	RTL9010Bx_MACsec_Egress_Write(0x0028, 0x00000000);
+	// Seq0 (PN), "need -1"
+	RTL9010Bx_MACsec_Egress_Write(0x0028, 0xB2C28464);
 
 	// SCI setting of SAK-1.
 	// SCI 12 15 35 24 - C0 89 5E 81.
@@ -1872,14 +1705,14 @@ u8 RTL9010Bx_MACsec_Initial_Configuration_example(void)
 	RTL9010Bx_MACsec_Egress_Write(0x0074, 0x45B306B5);
 
 	// SAK-2 H-key setting, Hash transform of the MACsec SA key (same as SA-1)
-	// H(SAK) = 72 A2 3D 80 - 12 1D E2 D5 - A8 50 25 3F - CF 43 12 0E.
+	// H(SAK) = 73 A2 3D 80 - 12 1D E2 D5 - A8 50 25 3F - CF 43 12 0E.
 	RTL9010Bx_MACsec_Egress_Write(0x0078, 0x803DA273);
 	RTL9010Bx_MACsec_Egress_Write(0x007C, 0xD5E21D12);
 	RTL9010Bx_MACsec_Egress_Write(0x0080, 0x3F2550A8);
 	RTL9010Bx_MACsec_Egress_Write(0x0084, 0x0E1243CF);
 
-	// Packet number of SAK-2.
-	RTL9010Bx_MACsec_Egress_Write(0x0088, 0x00000000);
+	// Seq0 (PN), "need -1"
+	RTL9010Bx_MACsec_Egress_Write(0x0088, 0xB2C28464);
 
 	// SCI setting of SAK-1. (same as SA-1)
 	// SCI 12 15 35 24 - C0 89 5E 81.
@@ -1909,6 +1742,10 @@ u8 RTL9010Bx_MACsec_Initial_Configuration_example(void)
 	// Non-match packet flow, set as bypass
 	RTL9010Bx_MACsec_Ingress_Write(0x7944, 0x0909C9C9);
 
+	// Control packet flow
+	// Destination port is Controlled, bit[7:6], CRC = 0, internal drop = 2, bypass =3.
+	RTL9010Bx_MACsec_Ingress_Write(0x7948, 0x09090909);
+
 	// MACsec Ingress Initialization
 	RTL9010Bx_MACsec_Ingress_Write(0xF100, 0x00003FFF);
 	RTL9010Bx_MACsec_Ingress_Write(0xF120, 0x00003FFF);
@@ -1923,7 +1760,7 @@ u8 RTL9010Bx_MACsec_Initial_Configuration_example(void)
 	// MACsec Ingress parsing setting for SAK-1, 
 	// Bit[9] tagged	1b : allow packets with a standard and valid MACsec tag to match.
  	// Bit[25:24] match AN number = 2
-	RTL9010Bx_MACsec_Ingress_Write(0x4010, 0x020F0200);
+	RTL9010Bx_MACsec_Ingress_Write(0x4010, 0x020F0E00);
 
 	// MACsec Ingress parsing setting for SAK-1, 
 	RTL9010Bx_MACsec_Ingress_Write(0x401C, 0x03800040);
@@ -1947,8 +1784,8 @@ u8 RTL9010Bx_MACsec_Initial_Configuration_example(void)
 	RTL9010Bx_MACsec_Ingress_Write(0x0020, 0x3F2550A8);
 	RTL9010Bx_MACsec_Ingress_Write(0x0024, 0x0E1243CF);
 
-	// Packet number of SAK-1.
-	RTL9010Bx_MACsec_Ingress_Write(0x0028, 0x00000001);
+	// Seq0 (PN)
+	RTL9010Bx_MACsec_Ingress_Write(0x0028, 0xB2C28465);
 
 	// Reply window for ingress SAK-1.
 	RTL9010Bx_MACsec_Ingress_Write(0x002C, 0x00000000);
@@ -1960,7 +1797,7 @@ u8 RTL9010Bx_MACsec_Initial_Configuration_example(void)
 	//					01b : bypass with bad packet indicator,
 	//					10b : internal drop by crypto-core (packet is not seen outside),
 	//					11b : do not drop (for debugging only).
-	RTL9010Bx_MACsec_Ingress_Write(0x7000, 0x0013000A);
+	RTL9010Bx_MACsec_Ingress_Write(0x7000, 0x0012000A);
 
 	// MACsec Ingress parsing setting for SAK-2, 
 	// Match DA[7~0] = 0x63 and SCI = 12 15 35 24 - C0 89 5E 81 to encrypt with SA-1 key.
@@ -1971,7 +1808,7 @@ u8 RTL9010Bx_MACsec_Initial_Configuration_example(void)
 	// MACsec Ingress parsing setting for SAK-2, 
 	// Bit[9] tagged	1b : allow packets with a standard and valid MACsec tag to match.
  	// Bit[25:24] match AN number = 3
-	RTL9010Bx_MACsec_Ingress_Write(0x4050, 0x030F0200);
+	RTL9010Bx_MACsec_Ingress_Write(0x4050, 0x030F0E00);
 
 	// MACsec Ingress parsing setting for SAK-2, 
 	RTL9010Bx_MACsec_Ingress_Write(0x405C, 0x03800040);
@@ -1981,7 +1818,7 @@ u8 RTL9010Bx_MACsec_Initial_Configuration_example(void)
 
 	// MACsec Ingress setting for SAK-2, 
 	RTL9010Bx_MACsec_Ingress_Write(0x0050, 0xD24BE06F);
-	RTL9010Bx_MACsec_Ingress_Write(0x0054, 0x00000000);
+	RTL9010Bx_MACsec_Ingress_Write(0x0054, 0x00000001);
 
 	// SAK-1 MACsec key setting (same as SA-1)
 	RTL9010Bx_MACsec_Ingress_Write(0x0058, 0xD02B7AAD);
@@ -1995,8 +1832,8 @@ u8 RTL9010Bx_MACsec_Initial_Configuration_example(void)
 	RTL9010Bx_MACsec_Ingress_Write(0x0070, 0x3F2550A8);
 	RTL9010Bx_MACsec_Ingress_Write(0x0074, 0x0E1243CF);
 
-	// Packet number of SAK-2.
-	RTL9010Bx_MACsec_Ingress_Write(0x0078, 0x00000001);
+	// Seq0 (PN)
+	RTL9010Bx_MACsec_Ingress_Write(0x0078, 0xB2C28465);
 
 	// Reply window for ingress SAK-2.
 	RTL9010Bx_MACsec_Ingress_Write(0x007C, 0x00000000);
@@ -2008,7 +1845,7 @@ u8 RTL9010Bx_MACsec_Initial_Configuration_example(void)
 	//					01b : bypass with bad packet indicator,
 	//					10b : internal drop by crypto-core (packet is not seen outside),
 	//					11b : do not drop (for debugging only).
-	RTL9010Bx_MACsec_Ingress_Write(0x7004, 0x0013010A);
+	RTL9010Bx_MACsec_Ingress_Write(0x7004, 0x0012010A);
 
 	// Enable SA match for SAK-1 and SAK-2.
 	RTL9010Bx_MACsec_Ingress_Write(0x6000, 0x00000003);
@@ -2019,5 +1856,271 @@ u8 RTL9010Bx_MACsec_Initial_Configuration_example(void)
 	return E_NOERR;
 
 }
+
+
+
+u8 RTL9010Bx_MACsec_Initial_Configuration_example_2(void)
+{
+	// Step 1. Set MACsec enable
+	RTL9010Bx_MACsec_Enable(2);
+
+	// Step 2. Initial Setting for MACsec Egress Block
+	RTL9010Bx_MACsec_Egress_Write(0xC810, 0x0000000C);
+	RTL9010Bx_MACsec_Egress_Write(0xF408, 0xE5880218);
+	RTL9010Bx_MACsec_Egress_Write(0xF430, 0x00000003);
+	RTL9010Bx_MACsec_Egress_Write(0x797C, 0x0200003C);
+
+	// Non-match packet flow, set as bypass
+	RTL9010Bx_MACsec_Egress_Write(0x7944, 0x010101C1);
+
+	// Control packet flow
+	// Destination port is Controlled, bit[7:6], CRC = 0, internal drop = 2, bypass =3.
+	RTL9010Bx_MACsec_Ingress_Write(0x7948, 0x01010101);
+
+	RTL9010Bx_MACsec_Egress_Write(0xF100, 0x00003FFF);
+	RTL9010Bx_MACsec_Egress_Write(0xF120, 0x00003FFF);
+
+	// MACsec Egress parsing setting, match DA[7~0] = 0x63 to encrypt with MACsec SA.
+	RTL9010Bx_MACsec_Egress_Write(0x400C, 0x00006300);
+	RTL9010Bx_MACsec_Egress_Write(0x401C, 0x00000040);
+
+	RTL9010Bx_MACsec_Egress_Write(0x4010, 0x000F2100);
+	RTL9010Bx_MACsec_Egress_Write(0x4020, 0x00000000);
+
+	// SAK-1 MACsec setting, Bit 26~27 = AN = 2.
+	RTL9010Bx_MACsec_Egress_Write(0x0000, 0xAA4BE066);
+	RTL9010Bx_MACsec_Egress_Write(0x0004, 0x00000000);
+
+	// SAK-1 MACsec key setting
+	// The 128-bits SAK key = AD 7A 2B D0 - 3E AC 83 5A - 6F 62 0F DC - B5 06 B3 45.
+	RTL9010Bx_MACsec_Egress_Write(0x0008, 0xD02B7AAD);
+	RTL9010Bx_MACsec_Egress_Write(0x000C, 0x5A83AC3E);
+	RTL9010Bx_MACsec_Egress_Write(0x0010, 0xDC0F626F);
+	RTL9010Bx_MACsec_Egress_Write(0x0014, 0x45B306B5);
+
+	// SAK-1 H-key setting, Hash ytansform of the MACsec SA key
+	// H(SAK) = 73 A2 3D 80 - 12 1D E2 D5 - A8 50 25 3F - CF 43 12 0E.
+	RTL9010Bx_MACsec_Egress_Write(0x0018, 0x803DA273);
+	RTL9010Bx_MACsec_Egress_Write(0x001C, 0xD5E21D12);
+	RTL9010Bx_MACsec_Egress_Write(0x0020, 0x3F2550A8);
+	RTL9010Bx_MACsec_Egress_Write(0x0024, 0x0E1243CF);
+
+	// Seq0 (PN), "need -1"
+	RTL9010Bx_MACsec_Egress_Write(0x0028, 0xB2C28464);
+	// Seq1 (PN), "need -1"
+	RTL9010Bx_MACsec_Egress_Write(0x002C, 0xB0DF459C);
+
+	// Salt = E6 30 E8 1A 48 DE 86 A2 1C 66 FA 6D
+	// SSCI = 7A 30 C1 18
+    // CxtSalt = 9C 00 29 02 48 DE 86 A2 1C 66 FA 6D, placed at IS0(XOR-ed with SSCI), IS1, IS2
+	// IS0 = Salt XOR-ed with SSCI
+	RTL9010Bx_MACsec_Egress_Write(0x0034, 0x0229009C);
+	// IS1
+	RTL9010Bx_MACsec_Egress_Write(0x0038, 0xA286DE48);
+	// IS2
+	RTL9010Bx_MACsec_Egress_Write(0x003C, 0x6DFA661C);
+	// SCI 12 15 35 24 - C0 89 5E 81.
+	RTL9010Bx_MACsec_Egress_Write(0x0040, 0x24351512);
+	RTL9010Bx_MACsec_Egress_Write(0x0044, 0x815E89C0);
+
+	// SAK update setting of SAK-1.
+//	RTL9010Bx_MACsec_Egress_Write(0x004C, 0x8000C001);
+
+	// SAK-2 MACsec setting, Bit 26~27 = AN = 3.
+	RTL9010Bx_MACsec_Egress_Write(0x0060, 0xAE4BE066);
+	RTL9010Bx_MACsec_Egress_Write(0x0064, 0x00000001);
+
+	// SAK-2 MACsec key setting (same as SA-1)
+	// The 128-bits SAK key = AD 7A 2B D0 - 3E AC 83 5A - 6F 62 0F DC - B5 06 B3 45.
+	RTL9010Bx_MACsec_Egress_Write(0x0068, 0xD02B7AAD);
+	RTL9010Bx_MACsec_Egress_Write(0x006C, 0x5A83AC3E);
+	RTL9010Bx_MACsec_Egress_Write(0x0070, 0xDC0F626F);
+	RTL9010Bx_MACsec_Egress_Write(0x0074, 0x45B306B5);
+
+	// SAK-2 H-key setting, Hash transform of the MACsec SA key (same as SA-1)
+	// H(SAK) = 73 A2 3D 80 - 12 1D E2 D5 - A8 50 25 3F - CF 43 12 0E.
+	RTL9010Bx_MACsec_Egress_Write(0x0078, 0x803DA273);
+	RTL9010Bx_MACsec_Egress_Write(0x007C, 0xD5E21D12);
+	RTL9010Bx_MACsec_Egress_Write(0x0080, 0x3F2550A8);
+	RTL9010Bx_MACsec_Egress_Write(0x0084, 0x0E1243CF);
+
+	// Seq0 (PN), "need -1"
+	RTL9010Bx_MACsec_Egress_Write(0x0088, 0xB2C28464);
+	// Seq1 (PN), "need -1"
+	RTL9010Bx_MACsec_Egress_Write(0x008C, 0xB0DF459C);
+
+	// Salt = E6 30 E8 1A 48 DE 86 A2 1C 66 FA 6D
+	// SSCI = 7A 30 C1 18
+    // CxtSalt = 9C 00 29 02 48 DE 86 A2 1C 66 FA 6D, placed at IS0(XOR-ed with SSCI), IS1, IS2
+	// IS0 = Salt XOR-ed with SSCI
+	RTL9010Bx_MACsec_Egress_Write(0x0094, 0x0229009C);
+	// IS1
+	RTL9010Bx_MACsec_Egress_Write(0x0098, 0xA286DE48);
+	// IS2
+	RTL9010Bx_MACsec_Egress_Write(0x009C, 0x6DFA661C);
+	
+	// SCI setting of SAK-1. (same as SA-1)
+	// SCI 12 15 35 24 - C0 89 5E 81.
+	RTL9010Bx_MACsec_Egress_Write(0x00A0, 0x24351512);
+	RTL9010Bx_MACsec_Egress_Write(0x00A4, 0x815E89C0);
+
+	// SAK update setting of SAK-2.
+//	RTL9010Bx_MACsec_Egress_Write(0x00AC, 0x8000C001);
+
+	// MACsec flow setting,
+	// Bit[16] protect_frame	1b : enable frame protection		 / 0b : bypass function through crypto-core.
+ 	// Bit[15:8] sa_index
+	// Bit[18] include_sci	1b : include explicit SCI in packet	 / 0b : use implicit SCI (not transmitted in packet).
+	// Bit[31] conf_protect	1b : enable confidentiality protection	 / 0b : disable confidentiality protection.
+	RTL9010Bx_MACsec_Egress_Write(0x7000, 0x80070003);
+
+	// Enablel SA match rule-1.
+	RTL9010Bx_MACsec_Egress_Write(0x6000, 0x00000001);
+
+	// Step 3. Initial Setting for MACsec Ingress Block
+	RTL9010Bx_MACsec_Ingress_Write(0x7900, 0x90FAC688);
+	RTL9010Bx_MACsec_Ingress_Write(0xC810, 0x0000000C);
+	RTL9010Bx_MACsec_Ingress_Write(0xF408, 0xE5880214);
+	RTL9010Bx_MACsec_Ingress_Write(0xF430, 0x00000003);
+	RTL9010Bx_MACsec_Ingress_Write(0x797C, 0x01000048);
+
+	// Non-match packet flow, set as bypass
+	RTL9010Bx_MACsec_Ingress_Write(0x7944, 0x0909C9C9);
+
+	// Control packet flow, destination port is Controlled, set as drop
+	// Destination port is Controlled, bit[7:6] CRC = 0, internal drop = 2, bypass = 3
+	RTL9010Bx_MACsec_Ingress_Write(0x7948, 0x09090909);
+
+	// MACsec Ingress Initialization
+	RTL9010Bx_MACsec_Ingress_Write(0xF100, 0x00003FFF);
+	RTL9010Bx_MACsec_Ingress_Write(0xF120, 0x00003FFF);
+	RTL9010Bx_MACsec_Ingress_Write(0xE840, 0x0000C000);
+
+	// MACsec Ingress parsing setting for SAK-1, 
+	// Match DA[7~0] = 0x63 and SCI = 12 15 35 24 - C0 89 5E 81 to encrypt with SA-1 key.
+	RTL9010Bx_MACsec_Ingress_Write(0x400C, 0x00006300);
+	RTL9010Bx_MACsec_Ingress_Write(0x4014, 0x24351512);
+	RTL9010Bx_MACsec_Ingress_Write(0x4018, 0x815E89C0);
+
+	// MACsec Ingress parsing setting for SAK-1, 
+	// Bit[9] tagged	1b : allow packets with a standard and valid MACsec tag to match.
+ 	// Bit[25:24] match AN number = 2
+	RTL9010Bx_MACsec_Ingress_Write(0x4010, 0x020F0E00);
+
+	// MACsec Ingress parsing setting for SAK-1, 
+	RTL9010Bx_MACsec_Ingress_Write(0x401C, 0x03800040);
+
+	// MACsec Ingress setting for SAK-1, 
+	RTL9010Bx_MACsec_Ingress_Write(0x4020, 0x00000000);
+
+	// MACsec Ingress setting for SAK-1, 
+	RTL9010Bx_MACsec_Ingress_Write(0x0000, 0xE24BA0EF);
+	RTL9010Bx_MACsec_Ingress_Write(0x0004, 0x00000000);
+
+	// SAK-1 MACsec key setting
+	RTL9010Bx_MACsec_Ingress_Write(0x0008, 0xD02B7AAD);
+	RTL9010Bx_MACsec_Ingress_Write(0x000C, 0x5A83AC3E);
+	RTL9010Bx_MACsec_Ingress_Write(0x0010, 0xDC0F626F);
+	RTL9010Bx_MACsec_Ingress_Write(0x0014, 0x45B306B5);
+
+	// SAK-1 H-key setting, Hash transform of the MACsec SA key
+	RTL9010Bx_MACsec_Ingress_Write(0x0018, 0x803DA273);
+	RTL9010Bx_MACsec_Ingress_Write(0x001C, 0xD5E21D12);
+	RTL9010Bx_MACsec_Ingress_Write(0x0020, 0x3F2550A8);
+	RTL9010Bx_MACsec_Ingress_Write(0x0024, 0x0E1243CF);
+
+	// Seq0 (PN)
+	RTL9010Bx_MACsec_Ingress_Write(0x0028, 0xB2C28465);
+	// Seq1 (PN)
+	RTL9010Bx_MACsec_Ingress_Write(0x002C, 0xB0DF459C);
+
+	// Reply window for ingress SAK-1.
+	RTL9010Bx_MACsec_Ingress_Write(0x0030, 0x00000000);
+
+	// IV0
+	RTL9010Bx_MACsec_Ingress_Write(0x0034, 0x0229009C);
+	// IV1
+	RTL9010Bx_MACsec_Ingress_Write(0x0038, 0xA286DE48);
+	// IV2
+	RTL9010Bx_MACsec_Ingress_Write(0x003C, 0x6DFA661C);
+
+	// Flow control setting for SAK-1,
+	// Bit[16] replay_protect	1b : enable replay protection		 / 0b : disable replay protection.
+ 	// Bit[15:8] sa_index = 0
+	// Bit[7:6] drop_action	00b : bypass with CRC corruption signaling,
+	//					01b : bypass with bad packet indicator,
+	//					10b : internal drop by crypto-core (packet is not seen outside),
+	//					11b : do not drop (for debugging only).
+	RTL9010Bx_MACsec_Ingress_Write(0x7000, 0x0012000A);
+
+	// MACsec Ingress parsing setting for SAK-2, 
+	// Match DA[7~0] = 0x63 and SCI = 12 15 35 24 - C0 89 5E 81 to encrypt with SA-1 key.
+	RTL9010Bx_MACsec_Ingress_Write(0x404C, 0x00006300);
+	RTL9010Bx_MACsec_Ingress_Write(0x4054, 0x24351512);
+	RTL9010Bx_MACsec_Ingress_Write(0x4058, 0x815E89C0);
+
+	// MACsec Ingress parsing setting for SAK-2, 
+	// Bit[9] tagged	1b : allow packets with a standard and valid MACsec tag to match.
+ 	// Bit[25:24] match AN number = 3
+	RTL9010Bx_MACsec_Ingress_Write(0x4050, 0x030F0E00);
+
+	// MACsec Ingress parsing setting for SAK-2, 
+	RTL9010Bx_MACsec_Ingress_Write(0x405C, 0x03800040);
+
+	// MACsec Ingress setting for SAK-2, 
+	RTL9010Bx_MACsec_Ingress_Write(0x4060, 0x00010000);
+
+	// MACsec Ingress setting for SAK-2, 
+	RTL9010Bx_MACsec_Ingress_Write(0x0050, 0xE24BA0EF);
+	RTL9010Bx_MACsec_Ingress_Write(0x0054, 0x00000001);
+
+	// SAK-1 MACsec key setting (same as SA-1)
+	RTL9010Bx_MACsec_Ingress_Write(0x0058, 0xD02B7AAD);
+	RTL9010Bx_MACsec_Ingress_Write(0x005C, 0x5A83AC3E);
+	RTL9010Bx_MACsec_Ingress_Write(0x0060, 0xDC0F626F);
+	RTL9010Bx_MACsec_Ingress_Write(0x0064, 0x45B306B5);
+
+	// SAK-2 H-key setting, Hash transform of the MACsec SA key (same as SA-1)
+	RTL9010Bx_MACsec_Ingress_Write(0x0068, 0x803DA273);
+	RTL9010Bx_MACsec_Ingress_Write(0x006C, 0xD5E21D12);
+	RTL9010Bx_MACsec_Ingress_Write(0x0070, 0x3F2550A8);
+	RTL9010Bx_MACsec_Ingress_Write(0x0074, 0x0E1243CF);
+
+	// Seq0 (PN)
+	RTL9010Bx_MACsec_Ingress_Write(0x0078, 0xB2C28465);
+	// Seq1 (PN)
+	RTL9010Bx_MACsec_Ingress_Write(0x007C, 0xB0DF459C);
+
+	// Reply window for ingress SAK-2.
+	RTL9010Bx_MACsec_Ingress_Write(0x0080, 0x00000000);
+
+	// IV0
+	RTL9010Bx_MACsec_Ingress_Write(0x0084, 0x0229009C);
+	// IV1
+	RTL9010Bx_MACsec_Ingress_Write(0x0088, 0xA286DE48);
+	// IV2
+	RTL9010Bx_MACsec_Ingress_Write(0x008C, 0x6DFA661C);
+
+	// Flow control setting for SAK-2,
+	// Bit[16] replay_protect	1b : enable replay protection		 / 0b : disable replay protection.
+ 	// Bit[15:8] sa_index = 1
+	// Bit[7:6] drop_action	00b : bypass with CRC corruption signaling,
+	//					01b : bypass with bad packet indicator,
+	//					10b : internal drop by crypto-core (packet is not seen outside),
+	//					11b : do not drop (for debugging only).
+	RTL9010Bx_MACsec_Ingress_Write(0x7004, 0x0012010A);
+
+	// Enable SA match for SAK-1 and SAK-2.
+	RTL9010Bx_MACsec_Ingress_Write(0x6000, 0x00000003);
+
+	// Step 4. Start MACsec function
+	RTL9010Bx_Start_MACsec_Function();
+
+	return E_NOERR;
+
+}
+
+
+
 
 
