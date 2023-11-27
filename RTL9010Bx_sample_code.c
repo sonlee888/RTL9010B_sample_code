@@ -33,7 +33,7 @@ u16 param_with_NWAY_check3_100M[32] = {0xAF86, 0x96AF, 0x86C0, 0xF8BF, 0x45D2, 0
 u8 RTL9010Bx_Initial_Configuration(void)
 {
 	u32 mdio_data = 0;
-	u32 timer = 2000;
+	u32 timer = 2000; // set a 2ms timer
 
 	//PHY parameter start//
 	mdio_write(31, 0x0D13);    
@@ -53,13 +53,19 @@ u8 RTL9010Bx_Initial_Configuration(void)
 	
 	
 	mdio_write(0, 0x8000);	// PHY soft-reset
+
 	do{	// Check soft-reset complete
+
 		mdio_data = mdio_read(0);
-	}while (mdio_data != 0x0140);
-	timer--;
-		if (timer == 0) {
+		if(mdio_data == 0xFFFF)
+			return E_NOTRDY;
+
+		timer--;
+		if (timer == 0){
 			return E_TIMOUT;
 		}
+	}while (mdio_data != 0x0140);
+
 
 	return E_NOERR;
 }
@@ -73,7 +79,7 @@ u8 RTL9010Bx_Initial_Configuration_Check(void)
 
 	u16 page;
 	u16 reg, i;
-	u32 timer = 2000;
+	u32 timer = 2000; // set a 2ms timer
 
 
 	for (i = 0; i < 21 ; i = i + 3)
@@ -112,7 +118,7 @@ u8 RTL9010Bx_Initial_Configuration_Check(void)
 u8 RTL9010Bx_Initial_With_AN_Configuration(void)
 {
 	u32 mdio_data = 0;
-	u32 timer = 2000;
+	u32 timer = 2000; // set a 2ms timer
 
 	//PHY parameter start//
 	mdio_write(31, 0x0D13);    
@@ -216,14 +222,21 @@ u8 RTL9010Bx_Initial_With_AN_Configuration(void)
 	}while(mdio_data != 0x0000);
 	// End //
 
+	timer = 2000; // set a 2ms timer
 	mdio_write(0, 0x8000);	// PHY soft-reset
+
 	do{	// Check soft-reset complete
+
 		mdio_data = mdio_read(0);
-	}while (mdio_data != 0x0140);
-	timer--;
-		if (timer == 0) {
+		if(mdio_data == 0xFFFF)
+			return E_NOTRDY;
+
+		timer--;
+		if (timer == 0){
 			return E_TIMOUT;
 		}
+	}while (mdio_data != 0x0140);
+
 
 	return E_NOERR;
 }
@@ -237,7 +250,7 @@ u8 RTL9010Bx_Initial_With_AN_Configuration_Check(void)
 
 	u16 page;
 	u16 reg, i;
-	u32 timer = 2000;
+	u32 timer = 2000; // set a 2ms timer
 
 
 	for (i = 0; i < 27; i = i + 3)
@@ -326,7 +339,7 @@ u8 RTL9010Bx_Initial_With_AN_Configuration_Check(void)
 
 	mdio_write(27, 0xB800);
 	mdio_data = mdio_read(28);
-	timer = 2000;
+	timer = 2000; // set a 2ms timer
 	do{	
 	
 		mdio_data = ((u16) mdio_read(28) & 0x0040);
@@ -345,7 +358,7 @@ u8 RTL9010Bx_Initial_With_AN_Configuration_Check(void)
 u8 RTL9010Bx_Initial_With_100M_TC10_Configuration(void)
 {
 	u32 mdio_data = 0;
-	u32 timer = 2000;
+	u32 timer = 2000; // set a 2ms timer
 
 	mdio_write(31, 0x0D13);    
 	mdio_write(21, 0x0047); 	//added
@@ -410,7 +423,7 @@ u8 RTL9010Bx_Initial_With_100M_TC10_Configuration(void)
 	mdio_write(27, 0xB800);
 	mdio_data = ((u16) mdio_read(28) & 0x40);
 
-	timer = 2000;
+	timer = 2000; // set a 2ms timer
 	
 	do{
 	mdio_data = ((u16) mdio_read(28) & 0x40);
@@ -421,9 +434,19 @@ u8 RTL9010Bx_Initial_With_100M_TC10_Configuration(void)
 	}while (mdio_data != 0x0000);
 	
 
+	timer = 2000; // set a 2ms timer
 	mdio_write(0, 0x8000);	// PHY soft-reset
+
 	do{	// Check soft-reset complete
+
 		mdio_data = mdio_read(0);
+		if(mdio_data == 0xFFFF)
+			return E_NOTRDY;
+
+		timer--;
+		if (timer == 0){
+			return E_TIMOUT;
+		}
 	}while (mdio_data != 0x0140);
 	
 
@@ -516,7 +539,7 @@ u8 RTL9010Bx_Initial_With_100M_TC10_Configuration_Check(void)
 
 	mdio_write(27, 0xB800);
 	mdio_data = mdio_read(28);
-	timer = 2000;
+	timer = 2000; // set a 2ms timer
 	do{	
 	
 		mdio_data = ((u16) mdio_read(28) & 0x0040);
@@ -534,7 +557,7 @@ u8 RTL9010Bx_Initial_With_100M_TC10_Configuration_Check(void)
 u8 RTL9010Bx_Initial_With_AN_100M_TC10_Configuration(void)
 {
 	u32 mdio_data = 0;
-	u32 timer = 2000;
+	u32 timer = 2000; // set a 2ms timer
 
 	//PHY parameter start//
 	mdio_write(31, 0x0D13);    
@@ -657,9 +680,19 @@ u8 RTL9010Bx_Initial_With_AN_100M_TC10_Configuration(void)
 	// End //
 
 
+	timer = 2000; // set a 2ms timer
 	mdio_write(0, 0x8000);	// PHY soft-reset
+
 	do{	// Check soft-reset complete
+
 		mdio_data = mdio_read(0);
+		if(mdio_data == 0xFFFF)
+			return E_NOTRDY;
+
+		timer--;
+		if (timer == 0){
+			return E_TIMOUT;
+		}
 	}while (mdio_data != 0x0140);
 	
 
@@ -792,7 +825,7 @@ u8 RTL9010Bx_Initial_With_AN_100M_TC10_Configuration_Check(void)
 
 	mdio_write(27, 0xB800);
 	mdio_data = mdio_read(28);
-	timer = 2000;
+	timer = 2000; // set a 2ms timer
 	do{	
 	
 		mdio_data = ((u16) mdio_read(28) & 0x0040);
@@ -930,7 +963,7 @@ u8 RTL9010Bx_CableFaultLocationAndDiagnosis(u16* cable_length)
 u8 RTL9010Bx_Soft_Reset(void)
 {
 	u32 mdio_data = 0;
-	u32 timer = 2000;
+	u32 timer = 2000; // set a 2ms timer
 
 	mdio_write(0, 0x8000);	// PHY soft-reset
 
