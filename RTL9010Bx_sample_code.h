@@ -1,4 +1,4 @@
-//All functions can refer to RTL9010Bx_Sample_Code_Note_v0.2.pdf.
+//All functions can refer to RTL9010Bx_Sample_Code_Note_v0.3.pdf.
 
 #include "mdio.h"
 #include "mdio2.h"
@@ -31,6 +31,11 @@
 
 #define PARAM_RESET(x)		(x=0)
 
+
+#define RX_LPI_INDICATION_REAL_TIME	 			0
+#define TX_LPI_INDICATION_REAL_TIME				1
+#define RX_LPI_STATUS_LATCHED_HIGH			2
+#define TX_LPI_STATUS_LATCHED_HIGH			3
 
 #define GENERAL_INTERRUPT_STATUS_PHY_STATUS_CHANGED			0
 #define GENERAL_INTERRUPT_STATUS_GENERAL_PURPOSE				1
@@ -161,6 +166,10 @@ u8 RTL9010Bx_Initial_Configuration(void);
 u8 RTL9010Bx_Initial_Configuration_Check(void);
 u8 RTL9010Bx_Initial_With_AN_Configuration(void);
 u8 RTL9010Bx_Initial_With_AN_Configuration_Check(void);
+u8 RTL9010Bx_Initial_With_100M_TC10_Configuration(void);
+u8 RTL9010Bx_Initial_With_100M_TC10_Configuration_Check(void);
+u8 RTL9010Bx_Initial_With_AN_100M_TC10_Configuration(void);
+u8 RTL9010Bx_Initial_With_AN_100M_TC10_Configuration_Check(void);
 u8 RTL9010Bx_GetLinkStatus(u8 SpeedType);
 u8 RTL9010Bx_Soft_Reset(void);
 u8 RTL9010Bx_CableFaultLocationAndDiagnosis(u16* cable_length);
@@ -169,6 +178,9 @@ u8 RTL9010Bx_Check_Linkup(void);
 u8 RTL9010Bx_Sleep_request(void);
 u8 RTL9010Bx_Sleep_initial(void);
 u8 RTL9010Bx_Sleep_reject(void);
+u8 RTL9010Bx_EEE_function(void);
+u8 RTL9010Bx_PHY_mode_EEE_function(void);
+u8 RTL9010Bx_TRX_LPI_Indication(u16* trx_lpi_indication);
 u8 RTL9010Bx_General_Interrupt_status(u16* general_int_status);
 u8 RTL9010Bx_General_purpose_sub_status(u16* general_sub_status);
 u8 RTL9010Bx_General_Interrupt_setting(void);
@@ -228,6 +240,4 @@ u32 RTL9010Bx_Ingress_MIBCounter_Decrypted_InPktsUntaggedHit(u8 SAK_n);
 
 u8 RTL9010Bx_MACsec_Initial_Configuration_example_1(void);
 u8 RTL9010Bx_MACsec_Initial_Configuration_example_2(void);
-
-
 
