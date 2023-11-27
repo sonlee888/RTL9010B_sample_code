@@ -1,13 +1,33 @@
-//All functions can refer to RTL9010Bx_Sample_Code_Note_v0.2.pdf.
+//All functions can refer to RTL9010Bx_Sample_Code_Note_v0.3.pdf.
 
 #include "RTL9010Bx_sample_code.h"
 
-u16 param_check[18] = { 0, 0x859C, 0x0609, 0, 0x85A2, 0x0300, 0, 0x85A4, 0x0F07, 0, 0xDC00, 0x1899, 
-                                             0x0A4C, 20, 0x2A2E,  0x0A49, 20, 0xFB00};
+u16 param_check[21] = {0x0D13, 21, 0x0047, 0, 0x859C, 0x0609, 0, 0x85A2, 0x0300, 0, 0x85A4, 0x0D07, 
+                       0, 0xDC00, 0x1899, 0x0A4C, 20, 0x2A2E,  0x0A49, 20, 0xFB00};
 
-u16 param2_check[24] = { 0, 0x859C, 0x0609,  0, 0x85A2, 0x0300,  0, 0x85A4, 0x0F07,  0, 0xDC00, 0x1899, 
-                         0x0A4C, 20, 0x2A2E,  0x0A49, 20, 0xFB00, 0x0A55, 17, 0xE302, 0xA54, 21, 0xFB05};
+u16 param2_check[27] = {0x0D13, 21, 0x0047, 0, 0x859C, 0x0609,  0, 0x85A2, 0x0300,  0, 0x85A4, 0x0D07,   
+                        0, 0xDC00, 0x1899, 0x0A4C, 20, 0x2A2E,  0x0A49, 20, 0xFB00, 0x0A55, 17, 0xE301,
+						 0xA54, 21, 0xF808};
 
+u16 param_with_NWAY_check[32] = {0xAF86, 0x96AF, 0x86C0, 0xF8BF, 0x45D2, 0x0241, 0x8EA1, 0x1111, 0xD10F, 0xBF41, 
+								0xC702, 0x414A, 0xFCD1, 0x04BF, 0x41CD, 0xAF15, 0x93D1, 0x06BF, 0x41C7, 0x0241,
+								0x4AFC, 0xBF41, 0xCDAF, 0x1593, 0xF8D1, 0x06BF, 0x41C7, 0x0241, 0x4AFC, 0xBF41,
+								0xCDAF, 0x1519};
+
+u16 param_check_100M[24] = {0x0D13, 21, 0x0047, 0, 0x859C,0x0609,  0, 0x85A2,0x0300,  0, 0x85A4,0x0D07,   
+                         	0,0xDC00,0x1899, 0x0A4C,20,0x2A2E,  0x0A49,20,0xFB00, 0x0A51, 16, 0x1C08};
+u16 param_check2_100M[4] = {0xA270, 0xD502, 0xA240, 0xE8A3};
+
+u16 param_with_NWAY_check1_100M[30] = {0x0D13, 21, 0x0047, 0, 0x859C, 0x0609,  0, 0x85A2, 0x0300,  0, 0x85A4, 0x0D07,   
+                        		 0, 0xDC00, 0x1899, 0x0A4C, 20, 0x2A2E,  0x0A49, 20, 0xFB00, 0x0A55, 17, 0xE301, 
+						 		0xA54, 21, 0xF808, 0x0A51, 16, 0x1C08};
+					
+u16 param_with_NWAY_check2_100M[4] = {0xA270, 0xD502, 0xA240, 0xE8A3};
+
+u16 param_with_NWAY_check3_100M[32] = {0xAF86, 0x96AF, 0x86C0, 0xF8BF, 0x45D2, 0x0241, 0x8EA1, 0x1111, 0xD10F, 0xBF41, 
+								0xC702, 0x414A, 0xFCD1, 0x04BF, 0x41CD, 0xAF15, 0x93D1, 0x06BF, 0x41C7, 0x0241,
+								0x4AFC, 0xBF41, 0xCDAF, 0x1593, 0xF8D1, 0x06BF, 0x41C7, 0x0241, 0x4AFC, 0xBF41,
+								0xCDAF, 0x1519};
 
 
 u8 RTL9010Bx_Initial_Configuration(void)
@@ -15,19 +35,22 @@ u8 RTL9010Bx_Initial_Configuration(void)
 	u32 mdio_data = 0;
 	u32 timer = 2000;
 
-
+	//PHY parameter start//
+	mdio_write(31, 0x0D13);    
+	mdio_write(21, 0x0047); 	//added
 	mdio_write(27, 0x859C);
 	mdio_write(28, 0x0609);
 	mdio_write(27, 0x85A2);
 	mdio_write(28, 0x0300);
 	mdio_write(27, 0x85A4);
-	mdio_write(28, 0x0F07);
+	mdio_write(28, 0x0D07); 	//modified
 	mdio_write(27, 0xDC00);
 	mdio_write(28, 0x1899);
 	mdio_write(31, 0x0A4C);
 	mdio_write(20, 0x2A2E);
 	mdio_write(31, 0x0A49);
 	mdio_write(20, 0xFB00);
+	
 	
 	mdio_write(0, 0x8000);	// PHY soft-reset
 	do{	// Check soft-reset complete
@@ -53,7 +76,7 @@ u8 RTL9010Bx_Initial_Configuration_Check(void)
 	u32 timer = 2000;
 
 
-	for (i = 0; i < 18; i = i + 3)
+	for (i = 0; i < 21 ; i = i + 3)
 	{
 		page = param_check[i];
 		mdio_data_chk = param_check[i + 2];
@@ -91,13 +114,15 @@ u8 RTL9010Bx_Initial_With_AN_Configuration(void)
 	u32 mdio_data = 0;
 	u32 timer = 2000;
 
-
+	//PHY parameter start//
+	mdio_write(31, 0x0D13);    
+	mdio_write(21, 0x0047); 	//added
 	mdio_write(27, 0x859C);
 	mdio_write(28, 0x0609);
 	mdio_write(27, 0x85A2);
 	mdio_write(28, 0x0300);
 	mdio_write(27, 0x85A4);
-	mdio_write(28, 0x0F07);
+	mdio_write(28, 0x0D07); 	//modified
 	mdio_write(27, 0xDC00);
 	mdio_write(28, 0x1899);
 	mdio_write(31, 0x0A4C);
@@ -105,9 +130,91 @@ u8 RTL9010Bx_Initial_With_AN_Configuration(void)
 	mdio_write(31, 0x0A49);
 	mdio_write(20, 0xFB00);
 	mdio_write(31, 0x0A55);
-	mdio_write(17, 0xE302);
+	mdio_write(17, 0xE301);     //modified
 	mdio_write(31, 0x0A54);
-	mdio_write(21, 0xFB05);
+	mdio_write(21, 0xF808);     //modified
+	
+	mdio_write(27, 0xB820);
+	mdio_write(28, 0x0010);
+	mdio_write(27, 0xB830);
+	mdio_write(28, 0x8000);
+	mdio_write(27, 0xB800);
+	mdio_data = ((u16) mdio_read(28) & 0x0040);
+	
+	do{
+		mdio_write(27, 0xB800);
+		mdio_data = ((u16) mdio_read(28) & 0x0040);
+		timer--;
+		if (timer == 0) {
+			return ERROR;
+		}
+	}while(mdio_data != 0x0040);
+
+	mdio_write(27, 0x8020);
+	mdio_write(28, 0x6200);
+	mdio_write(27, 0xB82E);
+	mdio_write(28, 0x0001);
+
+	mdio_write(27, 0x8690);
+	mdio_write(28, 0xAF86);
+	mdio_write(28, 0x96AF);
+	mdio_write(28, 0x86C0);
+	mdio_write(28, 0xF8BF);
+	mdio_write(28, 0x45D2);
+	mdio_write(28, 0x0241);
+	mdio_write(28, 0x8EA1);
+	mdio_write(28, 0x1111);
+	mdio_write(28, 0xD10F);
+	mdio_write(28, 0xBF41);
+	mdio_write(28, 0xC702);
+	mdio_write(28, 0x414A);
+	mdio_write(28, 0xFCD1);
+	mdio_write(28, 0x04BF);
+	mdio_write(28, 0x41CD);
+	mdio_write(28, 0xAF15);
+	mdio_write(28, 0x93D1);
+	mdio_write(28, 0x06BF);
+	mdio_write(28, 0x41C7);
+	mdio_write(28, 0x0241);
+	mdio_write(28, 0x4AFC);
+	mdio_write(28, 0xBF41);
+	mdio_write(28, 0xCDAF);
+	mdio_write(28, 0x1593);
+	mdio_write(28, 0xF8D1);
+	mdio_write(28, 0x06BF);
+	mdio_write(28, 0x41C7);
+	mdio_write(28, 0x0241);
+	mdio_write(28, 0x4AFC);
+	mdio_write(28, 0xBF41);
+	mdio_write(28, 0xCDAF);
+	mdio_write(28, 0x1519);
+	mdio_write(27, 0xB818);
+	mdio_write(28, 0x1590);
+	mdio_write(27, 0xB81A);
+	mdio_write(28, 0x1516);
+	mdio_write(27, 0xB832);
+	mdio_write(28, 0x0003);
+
+	mdio_write(27, 0xB82E);
+	mdio_write(28, 0x0000);
+	mdio_write(27, 0x8020);
+	mdio_write(28, 0x0000);
+	mdio_write(27, 0xB820);
+	mdio_write(28, 0x0000);
+
+	mdio_write(27, 0xB800);
+	mdio_data = mdio_read(28)& 0x0040;
+	timer = 2000; // set a 2ms timer
+	do{	
+	
+		mdio_write(27, 0xB800);
+		mdio_data = ((u16) mdio_read(28) & 0x0040);
+		timer--;
+		if (timer == 0) {
+			return ERROR;
+		}
+	}while(mdio_data != 0x0000);
+	// End //
 
 	mdio_write(0, 0x8000);	// PHY soft-reset
 	do{	// Check soft-reset complete
@@ -133,7 +240,7 @@ u8 RTL9010Bx_Initial_With_AN_Configuration_Check(void)
 	u32 timer = 2000;
 
 
-	for (i = 0; i < 24; i = i + 3)
+	for (i = 0; i < 27; i = i + 3)
 	{
 		page = param2_check[i];
 		mdio_data_chk = param2_check[i + 2];
@@ -156,15 +263,549 @@ u8 RTL9010Bx_Initial_With_AN_Configuration_Check(void)
 		}
 	}
 
+	mdio_write(27, 0xB820);
+	mdio_write(28, 0x0010);
+	mdio_write(27, 0xB830);
+	mdio_write(28, 0x8000);
+	mdio_write(27, 0xB800);
+	timer = 2000;
+	do{	
 	
+		mdio_data = ((u16) mdio_read(28) & 0x0040);
+		timer--;
+		if (timer == 0) {
+			return ERROR;
+		}
+	}while (mdio_data != 0x0040);
+
+	mdio_write(27, 0x8020);
+	mdio_write(28, 0x6200);
+	mdio_write(27, 0xB82E);
+	mdio_write(28, 0x0001);
+	
+	
+	for(i=0; i<32 ;i++){
+		mdio_write(27, (0x8690 + i*2));
+		mdio_data = mdio_read(28);
+		mdio_data_chk = param_with_NWAY_check[i];
+		if(mdio_data_chk!= mdio_data){
+			DBGMSG(("%dth param error data=0x%04X  expected_data=0x%04X\r\n",i,mdio_data, mdio_data_chk));
+			return ERROR;
+		}
+	}
+	i++;
+	mdio_write(27, 0xB818);
+	mdio_data = mdio_read(28);
+	mdio_data_chk = 0x1590;
+	if(mdio_data_chk!= mdio_data){
+		DBGMSG(("%dth param error data=0x%04X  expected_data=0x%04X\r\n",i,mdio_data, mdio_data_chk));
+		return ERROR;
+	}
+	i++;
+	mdio_write(27, 0xB81A);
+	mdio_data = mdio_read(28);
+	mdio_data_chk = 0x1516;
+	if(mdio_data_chk!= mdio_data){
+		DBGMSG(("%dth param error data=0x%04X  expected_data=0x%04X\r\n",i,mdio_data, mdio_data_chk));
+		return ERROR;
+	}
+	i++;
+	mdio_write(27, 0xB832);
+	mdio_data = mdio_read(28);
+	mdio_data_chk = 0x0003;
+	if(mdio_data_chk!= mdio_data){
+		DBGMSG(("%dth param error data=0x%04X  expected_data=0x%04X\r\n",i,mdio_data, mdio_data_chk));
+		return ERROR;
+	}
+	mdio_write(27, 0xB82E);
+	mdio_write(28, 0x0000);
+	mdio_write(27, 0x8020);
+	mdio_write(28, 0x0000);
+	mdio_write(27, 0xB820);
+	mdio_write(28, 0x0000);
+
+	mdio_write(27, 0xB800);
+	mdio_data = mdio_read(28);
+	timer = 2000;
+	do{	
+	
+		mdio_data = ((u16) mdio_read(28) & 0x0040);
+		timer--;
+		if (timer == 0) {
+			return ERROR;
+		}
+	}while (mdio_data != 0x0000);
+		
+
+
+	return E_NOERR;
+}
+
+
+u8 RTL9010Bx_Initial_With_100M_TC10_Configuration(void)
+{
+	u32 mdio_data = 0;
+	u32 timer = 2000;
+
+	mdio_write(31, 0x0D13);    
+	mdio_write(21, 0x0047); 	//added
+	mdio_write(27, 0x859C);
+	mdio_write(28, 0x0609);
+	mdio_write(27, 0x85A2);
+	mdio_write(28, 0x0300);
+	mdio_write(27, 0x85A4);
+	mdio_write(28, 0x0D07); 	//modified
+	mdio_write(27, 0xDC00);
+	mdio_write(28, 0x1899);
+	mdio_write(31, 0x0A4C);
+	mdio_write(20, 0x2A2E);
+	mdio_write(31, 0x0A49);
+	mdio_write(20, 0xFB00);
+	mdio_write(31, 0x0A51);
+	mdio_write(16, 0x1C08);		//added
+
+	mdio_write(27, 0xB820);
+	mdio_write(28, 0x0010);
+	mdio_write(27, 0xB830);
+	mdio_write(28, 0x8000);
+	mdio_write(27, 0xB800);
+	mdio_data = ((u16) mdio_read(28) & 0x0040);
+	
+	do{
+	mdio_write(27, 0xB800);
+	mdio_data = ((u16) mdio_read(28) & 0x0040);
+	timer--;
+	if (timer ==0){
+		return E_TIMOUT;
+	}
+	}while (mdio_data != 0x0040);
+
+	mdio_write(27, 0x8020);
+	mdio_write(28, 0x6200);
+	mdio_write(27, 0xB82E);
+	mdio_write(28, 0x0001);
+	mdio_write(27, 0xB820);
+	mdio_write(28, 0x0290);
+
+	mdio_write(27, 0xA012);
+	mdio_write(28, 0x0000);
+	mdio_write(27, 0xA014);
+	mdio_write(28, 0xA270);
+	mdio_write(28, 0xD502);
+	mdio_write(28, 0xA240);
+	mdio_write(28, 0xE8A3);
+	mdio_write(27, 0xA01A);
+	mdio_write(28, 0x0000);
+	mdio_write(27, 0xa000);
+	mdio_write(28, 0x88A2);
+
+	mdio_write(27, 0xB820);
+	mdio_write(28, 0x0210);
+	mdio_write(27, 0xB82E);
+	mdio_write(28, 0x0000);
+	mdio_write(27, 0x8020);
+	mdio_write(28, 0x0000);
+	mdio_write(27, 0xB820);
+	mdio_write(28, 0x0000);
+	mdio_write(27, 0xB800);
+	mdio_data = ((u16) mdio_read(28) & 0x40);
+
+	timer = 2000;
+	
+	do{
+	mdio_data = ((u16) mdio_read(28) & 0x40);
+	timer--;
+	if (timer ==0){
+		return E_TIMOUT;
+	}
+	}while (mdio_data != 0x0000);
+	
+
+	mdio_write(0, 0x8000);	// PHY soft-reset
+	do{	// Check soft-reset complete
+		mdio_data = mdio_read(0);
+	}while (mdio_data != 0x0140);
+	
+
+	return E_NOERR;
+
+}
+
+
+
+u8 RTL9010Bx_Initial_With_100M_TC10_Configuration_Check(void)
+{
+	
+	u16 mdio_data = 0, mdio_data_temp;
+	u16 mdio_data_chk = 0;
+	u32 timer = 2000; // set a 2ms timer
+
+	u16 page;
+	u16 reg, i,param_address;
+	
+	for(i=0;i<24;i=i+3){
+		page = param_check_100M[i];
+		mdio_data_chk = param_check_100M[i+2];
+		reg = param_check_100M[i+1];
+		if(page == 0){
+			mdio_write(27,reg);
+			mdio_data = mdio_read(28);
+		}
+		else{
+			mdio_write(31,page);
+			mdio_data = mdio_read(reg);
+		}
+		if(mdio_data_chk!= mdio_data){
+			DBGMSG(("%dth param error page=0x%04X reg=0x%04X data=0x%04X\r\n",i/3,page, reg, mdio_data));
+			return E_FAILED;
+		}
+	}
+	
+	mdio_write(27, 0xB820);
+	mdio_write(28, 0x0010);
+	mdio_write(27, 0xB830);
+	mdio_write(28, 0x8000);
+	mdio_write(27, 0xB800);
+	timer = 2000;
+	do{	
+	
+		mdio_data = ((u16) mdio_read(28) & 0x0040);
+		timer--;
+		if (timer == 0) {
+			return E_FAILED;
+		}
+	}while (mdio_data != 0x0040);
+
+	mdio_write(27, 0x8020);
+	mdio_write(28, 0x6200);
+	mdio_write(27, 0xB82E);
+	mdio_write(28, 0x0001);
+	
+	param_address = 0;
+	for(i=0;i<4;i++){
+		mdio_write(31, 0xA01);
+		mdio_data_temp = mdio_read(17);
+		mdio_data_temp&=~(0x1FF);
+		param_address&=0x1FF;
+		mdio_write(17, (mdio_data_temp|param_address));
+		mdio_write(31, 0xA01);
+		mdio_data = mdio_read(18);
+		mdio_data_chk = param_check2_100M[i];
+		if(mdio_data_chk!= mdio_data){
+			DBGMSG(("%dth param error data=0x%04X  expected_data=0x%04X\r\n",i,mdio_data, mdio_data_chk));
+			return E_FAILED;
+		}
+		param_address++;
+	}
+
+	i++;
+	mdio_write(27, 0xA000);
+	mdio_data = mdio_read(28);
+	mdio_data_chk = 0x88A2;
+	if(mdio_data_chk!= mdio_data){
+		DBGMSG(("%dth param_2 error data=0x%04X  expected_data=0x%04X\r\n",i,mdio_data, mdio_data_chk));
+		return ERROR;
+	}
+
+	mdio_write(27, 0xB82E);
+	mdio_write(28, 0x0000);
+	mdio_write(27, 0x8020);
+	mdio_write(28, 0x0000);
+	mdio_write(27, 0xB820);
+	mdio_write(28, 0x0000);
+
+	mdio_write(27, 0xB800);
+	mdio_data = mdio_read(28);
+	timer = 2000;
+	do{	
+	
+		mdio_data = ((u16) mdio_read(28) & 0x0040);
 		timer--;
 		if (timer == 0) {
 			return E_TIMOUT;
 		}
+	}while (mdio_data != 0x0000);
+	
+	return E_NOERR;
+	
+
+}
+
+u8 RTL9010Bx_Initial_With_AN_100M_TC10_Configuration(void)
+{
+	u32 mdio_data = 0;
+	u32 timer = 2000;
+
+	//PHY parameter start//
+	mdio_write(31, 0x0D13);    
+	mdio_write(21, 0x0047); 	//added
+	mdio_write(27, 0x859C);
+	mdio_write(28, 0x0609);
+	mdio_write(27, 0x85A2);
+	mdio_write(28, 0x0300);
+	mdio_write(27, 0x85A4);
+	mdio_write(28, 0x0D07); 	//modified
+	mdio_write(27, 0xDC00);
+	mdio_write(28, 0x1899);
+	mdio_write(31, 0x0A4C);
+	mdio_write(20, 0x2A2E);
+	mdio_write(31, 0x0A49);
+	mdio_write(20, 0xFB00);
+	mdio_write(31, 0x0A55);
+	mdio_write(17, 0xE301);     //modified
+	mdio_write(31, 0x0A54);
+	mdio_write(21, 0xF808);     //modified
+	mdio_write(31, 0x0A51);
+	mdio_write(16, 0x1C08);		//added
+
+	mdio_write(27, 0xB820);
+	mdio_write(28, 0x0010);
+	mdio_write(27, 0xB830);
+	mdio_write(28, 0x8000);
+	mdio_write(27, 0xB800);
+	mdio_data = ((u16) mdio_read(28) & 0x0040);
+	
+	do{
+		mdio_write(27, 0xB800);
+		mdio_data = ((u16) mdio_read(28) & 0x0040);
+		timer--;
+		if (timer == 0) {
+			return ERROR;
+		}
+	}while(mdio_data != 0x0040);
+
+	mdio_write(27, 0x8020);
+	mdio_write(28, 0x6200);
+	mdio_write(27, 0xB82E);
+	mdio_write(28, 0x0001);
+
+	mdio_write(27, 0xB820);
+	mdio_write(28, 0x0290);
+	mdio_write(27, 0xA012);
+	mdio_write(28, 0x0000);
+	mdio_write(27, 0xA014);
+	mdio_write(28, 0xA270);
+	mdio_write(28, 0xD502);
+	mdio_write(28, 0xA240);
+	mdio_write(28, 0xE8A3);
+	mdio_write(27, 0xA01A);
+	mdio_write(28, 0x0000);
+	mdio_write(27, 0xA000);
+	mdio_write(28, 0x88A2);
+	mdio_write(27, 0xB820);
+	mdio_write(28, 0x0210);
+
+	mdio_write(27, 0x8690);
+	mdio_write(28, 0xAF86);
+	mdio_write(28, 0x96AF);
+	mdio_write(28, 0x86C0);
+	mdio_write(28, 0xF8BF);
+	mdio_write(28, 0x45D2);
+	mdio_write(28, 0x0241);
+	mdio_write(28, 0x8EA1);
+	mdio_write(28, 0x1111);
+	mdio_write(28, 0xD10F);
+	mdio_write(28, 0xBF41);
+	mdio_write(28, 0xC702);
+	mdio_write(28, 0x414A);
+	mdio_write(28, 0xFCD1);
+	mdio_write(28, 0x04BF);
+	mdio_write(28, 0x41CD);
+	mdio_write(28, 0xAF15);
+	mdio_write(28, 0x93D1);
+	mdio_write(28, 0x06BF);
+	mdio_write(28, 0x41C7);
+	mdio_write(28, 0x0241);
+	mdio_write(28, 0x4AFC);
+	mdio_write(28, 0xBF41);
+	mdio_write(28, 0xCDAF);
+	mdio_write(28, 0x1593);
+	mdio_write(28, 0xF8D1);
+	mdio_write(28, 0x06BF);
+	mdio_write(28, 0x41C7);
+	mdio_write(28, 0x0241);
+	mdio_write(28, 0x4AFC);
+	mdio_write(28, 0xBF41);
+	mdio_write(28, 0xCDAF);
+	mdio_write(28, 0x1519);
+	mdio_write(27, 0xB818);
+	mdio_write(28, 0x1590);
+	mdio_write(27, 0xB81A);
+	mdio_write(28, 0x1516);
+	mdio_write(27, 0xB832);
+	mdio_write(28, 0x0003);
+
+	mdio_write(27, 0xB82E);
+	mdio_write(28, 0x0000);
+	mdio_write(27, 0x8020);
+	mdio_write(28, 0x0000);
+	mdio_write(27, 0xB820);
+	mdio_write(28, 0x0000);
+
+	mdio_write(27, 0xB800);
+	mdio_data = mdio_read(28)& 0x0040;
+	timer = 2000; // set a 2ms timer
+	do{	
+	
+		mdio_write(27, 0xB800);
+		mdio_data = ((u16) mdio_read(28) & 0x0040);
+		timer--;
+		if (timer == 0) {
+			return ERROR;
+		}
+	}while(mdio_data != 0x0000);
+	// End //
+
+
+	mdio_write(0, 0x8000);	// PHY soft-reset
+	do{	// Check soft-reset complete
+		mdio_data = mdio_read(0);
+	}while (mdio_data != 0x0140);
 	
 
 	return E_NOERR;
 }
+
+	
+
+u8 RTL9010Bx_Initial_With_AN_100M_TC10_Configuration_Check(void)
+{
+	u16 mdio_data = 0, mdio_data_temp;
+	u16 mdio_data_chk = 0;
+	u32 timer = 2000; // set a 2ms timer
+
+	u16 page;
+	u16 reg, i,param_address;
+
+
+	for (i = 0; i < 30; i = i + 3)
+	{
+		page = param_with_NWAY_check1_100M[i];
+		mdio_data_chk = param_with_NWAY_check1_100M[i + 2];
+		reg = param_with_NWAY_check1_100M[i + 1];
+		if (page == 0)
+		{
+			mdio_write(27, reg);
+			mdio_data = mdio_read(28);
+		}
+		else
+		{
+			mdio_write(31, page);
+			mdio_data = mdio_read(reg);
+		}
+
+		if (mdio_data_chk != mdio_data)
+		{
+			DBGMSG(("%dth param error page=0x%04X reg=0x%04X data=0x%04X\r\n", i / 3, page, reg, mdio_data));
+			return E_FAILED;
+		}
+	}
+
+	mdio_write(27, 0xB820);
+	mdio_write(28, 0x0010);
+	mdio_write(27, 0xB830);
+	mdio_write(28, 0x8000);
+	mdio_write(27, 0xB800);
+	timer = 2000;
+	do{	
+	
+		mdio_data = ((u16) mdio_read(28) & 0x0040);
+		timer--;
+		if (timer == 0) {
+			return ERROR;
+		}
+	}while (mdio_data != 0x0040);
+
+	mdio_write(27, 0x8020);
+	mdio_write(28, 0x6200);
+	mdio_write(27, 0xB82E);
+	mdio_write(28, 0x0001);
+	
+
+	param_address = 0;
+	for(i=0;i<4;i++){
+		mdio_write(31, 0xA01);
+		mdio_data_temp = mdio_read(17);
+		mdio_data_temp&=~(0x1FF);
+		param_address&=0x1FF;
+		mdio_write(17, (mdio_data_temp|param_address));
+		mdio_write(31, 0xA01);
+		mdio_data = mdio_read(18);
+		mdio_data_chk = param_with_NWAY_check2_100M[i];
+		if(mdio_data_chk!= mdio_data){
+			DBGMSG(("%dth param error data=0x%04X  expected_data=0x%04X\r\n",i,mdio_data, mdio_data_chk));
+			return E_FAILED;
+		}
+		param_address++;
+	}
+	
+	
+	i++;
+	mdio_write(27, 0xA000);
+	mdio_data = mdio_read(28);
+	mdio_data_chk = 0x88A2;
+	if(mdio_data_chk!= mdio_data){
+		DBGMSG(("%dth param_2 error data=0x%04X  expected_data=0x%04X\r\n",i,mdio_data, mdio_data_chk));
+		return ERROR;
+	}
+
+	
+	for(i=0; i<32 ;i++){
+		mdio_write(27, (0x8690 + i*2));
+		mdio_data = mdio_read(28);
+		mdio_data_chk = param_with_NWAY_check3_100M[i];
+		if(mdio_data_chk!= mdio_data){
+			DBGMSG(("%dth param error data=0x%04X  expected_data=0x%04X\r\n",i,mdio_data, mdio_data_chk));
+			return ERROR;
+		}
+	}
+	i++;
+	mdio_write(27, 0xB818);
+	mdio_data = mdio_read(28);
+	mdio_data_chk = 0x1590;
+	if(mdio_data_chk!= mdio_data){
+		DBGMSG(("%dth param error data=0x%04X  expected_data=0x%04X\r\n",i,mdio_data, mdio_data_chk));
+		return ERROR;
+	}
+	i++;
+	mdio_write(27, 0xB81A);
+	mdio_data = mdio_read(28);
+	mdio_data_chk = 0x1516;
+	if(mdio_data_chk!= mdio_data){
+		DBGMSG(("%dth param error data=0x%04X  expected_data=0x%04X\r\n",i,mdio_data, mdio_data_chk));
+		return ERROR;
+	}
+	i++;
+	mdio_write(27, 0xB832);
+	mdio_data = mdio_read(28);
+	mdio_data_chk = 0x0003;
+	if(mdio_data_chk!= mdio_data){
+		DBGMSG(("%dth param error data=0x%04X  expected_data=0x%04X\r\n",i,mdio_data, mdio_data_chk));
+		return ERROR;
+	}
+	mdio_write(27, 0xB82E);
+	mdio_write(28, 0x0000);
+	mdio_write(27, 0x8020);
+	mdio_write(28, 0x0000);
+	mdio_write(27, 0xB820);
+	mdio_write(28, 0x0000);
+
+	mdio_write(27, 0xB800);
+	mdio_data = mdio_read(28);
+	timer = 2000;
+	do{	
+	
+		mdio_data = ((u16) mdio_read(28) & 0x0040);
+		timer--;
+		if (timer == 0) {
+			return ERROR;
+		}
+	}while (mdio_data != 0x0000);
+		
+
+	return E_NOERR;
+}
+
 
 
 
@@ -177,8 +818,8 @@ u8 RTL9010Bx_GetLinkStatus(u8 SpeedType)
 	u16 link_status = 0;
 	u16 pcs_status;
 	u8 pcs_status_checkOK=0;
-
-
+	
+	
 	mdio_data = mdio_read(1);
 	mdio_data = mdio_read(1);//Read twice for current link status.
 	link_status = (u16)(mdio_data & 0x0004);
@@ -186,22 +827,32 @@ u8 RTL9010Bx_GetLinkStatus(u8 SpeedType)
 	mdio_write(31, 0x0A60);
 	mdio_data = mdio_read(16);
 	pcs_status = (u16)(mdio_data & 0x00FF);
+	
+	switch (SpeedType){
+		case Speed_1000BaseT1:
+			mdio_data = mdio_read(10);
+			loc_ok = ((u16)(mdio_data & 0x2000) == 0x2000);
+			rem_ok = ((u16)(mdio_data & 0x1000) == 0x1000);
+			if(pcs_status == 0x0037){
+				pcs_status_checkOK = 1;	
+			}
+		break;
 
-	if(SpeedType == Speed_1000BaseT1){
-		mdio_data = mdio_read(10);
-		loc_ok = ((u16)(mdio_data & 0x2000) == 0x2000);
-		rem_ok = ((u16)(mdio_data & 0x1000) == 0x1000);
-		if(pcs_status == 0x0037)
-			pcs_status_checkOK = 1;
-	} else {
-		mdio_write(31, 0x0A64);
-		mdio_data = mdio_read(23);
-		loc_ok = ((u16)(mdio_data & 0x0004) == 0x0004);
-		rem_ok = ((u16)(mdio_data & 0x0400) == 0x0400);
-		if(pcs_status == 0x0044)
-			pcs_status_checkOK = 1;
+		case Speed_100BaseT1:
+			mdio_write(31, 0x0A64);
+			mdio_data = mdio_read(23);
+			loc_ok = ((u16)(mdio_data & 0x0004) == 0x0004);
+			rem_ok = ((u16)(mdio_data & 0x0080) == 0x0080);
+			if(pcs_status == 0x0044){
+				pcs_status_checkOK = 1;
+			}
+		 break;
+
+			
+		default:
+			break;
+	
 	}
-
 	DBGMSG(("link_status = 0x%04X\r\n", link_status));
 	DBGMSG(("loc_ok = 0x%04X\r\n", loc_ok));
 	DBGMSG(("rem_ok = 0x%04X\r\n", rem_ok));
@@ -212,12 +863,24 @@ u8 RTL9010Bx_GetLinkStatus(u8 SpeedType)
 	else 
 		return LinkDown;
 
+	
 }
 
 u8 RTL9010Bx_CableFaultLocationAndDiagnosis(u16* cable_length)
 {
 	u32 mdio_data = 0;
 	u16 cable_st;
+
+	/*For RTL9010BRL/BSL - up to 40m cable length, shall add additional parameters as below:
+	
+	mdio_write(31, 0x0D13);
+	mdio_write(21, 0x0087);
+	mdio_write(31, 0x0C01);
+	mdio_write(18, 0x014A);	
+	
+	End*/
+	
+	
 
 	//Enable RTCT and start to test
 	mdio_write(31, 0x0A42);    //PAGSR:change page to 0xA42
@@ -381,6 +1044,86 @@ u8 RTL9010Bx_Sleep_request(void)
 	mdio_data = mdio_read(21);
 	mdio_write(21, (mdio_data | 0x0200)); //SLPCR: page 0xa42,reg21,bit[9]=1//mac sends sleep request to PHY
 	return E_NOERR;
+}
+
+
+u8 RTL9010Bx_EEE_function(void)
+{
+
+	u32 mdio_data = 0;
+	mdio_write(31, 0xa59);
+	mdio_data = mdio_read(20);
+	mdio_write(20, mdio_data | 0x0003); //Enable OAM (bit[1]) & EEE (bit[0]).
+
+	/*For SGMII - Enable additional register as below:
+
+	mdio_write(27, 0xcf04);
+	mdio_data = mdio_read(28);
+	mdio_write(28, mdio_data | 0x8000); //Enable LPI signal pass through SGMII interface.
+
+	END*/
+	
+	RTL9010Bx_Soft_Reset(); //Software reset to let EEE take effect.
+	DBGMSG(("OAM & EEE function is enabled.\r\n"));
+	return E_NOERR;
+
+}
+
+
+u8 RTL9010Bx_PHY_mode_EEE_function(void)
+{
+
+	u32 mdio_data = 0;
+	mdio_write(31, 0xa59);
+	mdio_data = mdio_read(20);
+	mdio_write(20, mdio_data | 0x0003); //Enable OAM (bit[1]) & EEE (bit[0]).
+
+	mdio_write(31, 0xa4c);
+	mdio_data = mdio_read(20);
+	mdio_write(20, mdio_data | 0x0001); //Enable PHY mode EEE (bit[0]).
+
+	RTL9010Bx_Soft_Reset(); //Software reset to let EEE take effect.
+	DBGMSG(("PHY mode EEE function is enabled.\r\n"));
+	return E_NOERR;
+	
+}
+
+
+u8 RTL9010Bx_TRX_LPI_Indication(u16* trx_lpi_indication)
+{
+
+	u32 mdio_data = 0;
+
+	mdio_write(31, 0xa5a); //PAGSR:changge page to 0xa5a
+	mdio_data = mdio_read(22);
+
+	if(mdio_data == 0xFFFF)
+		return E_NOTRDY;
+	DBGMSG(("mdio_data= 0x%04X\r\n",mdio_data));	
+
+	if (BIT_TST(mdio_data,8)){//RX_LPI_Indication, real-time
+		DBGMSG(("RX LPI is being triggered\r\n"));
+		BIT_SET((*trx_lpi_indication),RX_LPI_INDICATION_REAL_TIME);
+	}
+
+	if (BIT_TST(mdio_data,9)){//TX_LPI_Indication, real-time
+		DBGMSG(("TX LPI is being triggered\r\n"));
+		BIT_SET((*trx_lpi_indication),TX_LPI_INDICATION_REAL_TIME);
+	}
+
+	if (BIT_TST(mdio_data,10)){//RX_LPI_Status, latched-high, read-clear
+		DBGMSG(("RX LPI had been triggered since last read\r\n"));
+		BIT_SET((*trx_lpi_indication),RX_LPI_STATUS_LATCHED_HIGH);
+	}
+
+	if (BIT_TST(mdio_data,11)){//TX_LPI_Status, latched-high, read-clear
+		DBGMSG(("TX LPI had been triggered since last read\r\n"));
+		BIT_SET((*trx_lpi_indication),TX_LPI_STATUS_LATCHED_HIGH);
+	}
+
+	
+	return E_NOERR;
+
 }
 
 u8 RTL9010Bx_General_purpose_sub_status(u16* general_sub_status)
@@ -1306,6 +2049,28 @@ u8 RTL9010Bx_MACsec_Enable(u8 Control)
 			BIT_SET(mdio_data, 4);
 			BIT_CLR(mdio_data, 3);
 			mdio_write(17, mdio_data);
+
+			/*For RTL9010BSA media converter board, the parameters as below shall be set when enable MACsec function.
+			//For RTL8211FS's compatibility:
+
+			mdio_write(31, 0xd90);
+			mdio_data = mdio_read(16);
+			mdio_write(16, mdio_data | 0x6);
+			mdio_write(31, 0xd94);
+			mdio_data = mdio_read(16);
+			mdio_write(16, mdio_data | 0x6);
+			mdio_write(31, 0xd98);
+			mdio_data = mdio_read(16);
+			mdio_write(16, mdio_data | 0x6);
+			mdio_write(31, 0xd9c);
+			mdio_data = mdio_read(16);
+			mdio_write(16, mdio_data | 0x6);
+			mdio_write(31, 0xda0);
+			mdio_data = mdio_read(17);
+			mdio_write(17, mdio_data | 0x60);
+
+			END*/
+
 			break;
 
 		case 2: //MACsec Enable with Flow control ON
@@ -1314,6 +2079,28 @@ u8 RTL9010Bx_MACsec_Enable(u8 Control)
 			BIT_SET(mdio_data, 4);
 			BIT_SET(mdio_data, 3);
 			mdio_write(17, mdio_data);
+
+			/*For RTL9010BSA media converter board, the parameters as below shall be set when enable MACsec function.
+			//For RTL8211FS's compatibility:
+
+			mdio_write(31, 0xd90);
+			mdio_data = mdio_read(16);
+			mdio_write(16, mdio_data | 0x6);
+			mdio_write(31, 0xd94);
+			mdio_data = mdio_read(16);
+			mdio_write(16, mdio_data | 0x6);
+			mdio_write(31, 0xd98);
+			mdio_data = mdio_read(16);
+			mdio_write(16, mdio_data | 0x6);
+			mdio_write(31, 0xd9c);
+			mdio_data = mdio_read(16);
+			mdio_write(16, mdio_data | 0x6);
+			mdio_write(31, 0xda0);
+			mdio_data = mdio_read(17);
+			mdio_write(17, mdio_data | 0x60);
+
+			END*/
+
 			break;
 
 		case 3: //MACsec disable
