@@ -281,7 +281,7 @@ u8 RTL9010Bx_Initial_With_AN_Configuration_Check(void)
 	mdio_write(27, 0xB830);
 	mdio_write(28, 0x8000);
 	mdio_write(27, 0xB800);
-	timer = 2000;
+	timer = 2000; // set a 2ms timer
 	do{	
 	
 		mdio_data = ((u16) mdio_read(28) & 0x0040);
@@ -739,7 +739,7 @@ u8 RTL9010Bx_Initial_With_AN_100M_TC10_Configuration_Check(void)
 	mdio_write(27, 0xB830);
 	mdio_write(28, 0x8000);
 	mdio_write(27, 0xB800);
-	timer = 2000;
+	timer = 2000; // set a 2ms timer
 	do{	
 	
 		mdio_data = ((u16) mdio_read(28) & 0x0040);
@@ -2088,19 +2088,19 @@ u8 RTL9010Bx_MACsec_Enable(u8 Control)
 
 			mdio_write(31, 0xd90);
 			mdio_data = mdio_read(16);
-			mdio_write(16, mdio_data | 0x6);
+			mdio_write(16, mdio_data & 0xFFFE);
 			mdio_write(31, 0xd94);
 			mdio_data = mdio_read(16);
-			mdio_write(16, mdio_data | 0x6);
+			mdio_write(16, mdio_data & 0xFFFE);
 			mdio_write(31, 0xd98);
 			mdio_data = mdio_read(16);
-			mdio_write(16, mdio_data | 0x6);
+			mdio_write(16, mdio_data & 0xFFFE);
 			mdio_write(31, 0xd9c);
 			mdio_data = mdio_read(16);
-			mdio_write(16, mdio_data | 0x6);
+			mdio_write(16, mdio_data & 0xFFFE);
 			mdio_write(31, 0xda0);
 			mdio_data = mdio_read(17);
-			mdio_write(17, mdio_data | 0x60);
+			mdio_write(17, mdio_data & 0xFFEF);
 
 			END*/
 
